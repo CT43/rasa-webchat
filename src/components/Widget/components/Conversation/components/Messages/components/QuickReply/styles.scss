@@ -7,19 +7,19 @@
   .#{$namespace}replies {
     @include replies;
   }
-  
+
   .#{$namespace}reply {
     @include reply;
   }
-  
+
   .#{$namespace}response {
     @include message-bubble($grey-2, #000, 0 15px 15px 15px);
     max-width: 85%;
   }
-  
+
   .#{$namespace}avatar {
-    width: 17px;
-    height: 17px;
+    width: 23px;
+    height: 23px;
     border-radius: 100%;
     margin-right: 6px;
     position: relative;

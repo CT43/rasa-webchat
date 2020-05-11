@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import profileAvatar from 'assets/vi_profile_crop.png'
 import { Widget, toggleChat, openChat, closeChat, showChat, hideChat, isOpen, isVisible, send, toggleInputDisabled } from './index_for_react_app';
 
 const plugin = {
@@ -16,7 +17,7 @@ const plugin = {
         customData={args.customData}
         inputTextFieldHint={args.inputTextFieldHint}
         connectingText={args.connectingText}
-        profileAvatar={args.profileAvatar}
+        profileAvatar={profileAvatar}
         showCloseButton={args.showCloseButton}
         showFullScreenButton={args.showFullScreenButton}
         hideWhenNotConnected={args.hideWhenNotConnected}
@@ -58,4 +59,3 @@ export {
   send,
   toggleInputDisabled
 };
-

@@ -1,15 +1,53 @@
 import React, { forwardRef } from 'react';
 import PropTypes from 'prop-types';
 import { Provider } from 'react-redux';
+import Cable from 'actioncable';
+import uuid from 'react-uuid';
 
+
+import { connect } from 'react-redux';
 import Widget from './components/Widget';
 import { initStore } from '../src/store/store';
 import socket from './socket';
+import { storeLocalSession, getLocalSession } from './store/reducers/helper';
+import {
+  toggleFullScreen,
+  toggleChat,
+  openChat,
+  closeChat,
+  showChat,
+  addUserMessage,
+  emitUserMessage,
+  addResponseMessage,
+  addCarousel,
+  addVideoSnippet,
+  addImageSnippet,
+  addQuickReply,
+  renderCustomComponent,
+  initialize,
+  connectServer,
+  disconnectServer,
+  pullSession,
+  newUnreadMessage,
+  triggerMessageDelayed,
+  triggerTooltipSent,
+  showTooltip,
+  emitMessageIfFirst,
+  clearMetadata,
+  setUserInput,
+  setLinkTarget,
+  setPageChangeCallbacks,
+  changeOldUrl,
+  setDomHighlight,
+  evalUrl,
+  setCustomCss
+} from 'actions';
 
 // eslint-disable-next-line import/no-mutable-exports
 export let store = null;
 
 const ConnectedWidget = forwardRef((props, ref) => {
+
   class Socket {
     constructor(
       url,
@@ -17,17 +55,20 @@ const ConnectedWidget = forwardRef((props, ref) => {
       path,
       protocol,
       protocolOptions,
-      onSocketEvent
+      onSocketEvent,
+      convo_unq_id
     ) {
-      this.url = url;
+      this.url = 'ws://localhost:3000/cable';
       this.customData = customData;
-      this.path = path;
+      this.path = '/cable';
       this.protocol = protocol;
       this.protocolOptions = protocolOptions;
       this.onSocketEvent = onSocketEvent;
       this.socket = null;
       this.onEvents = [];
       this.marker = Math.random();
+      this.convo_unq_id = uuid();
+      this.chatLogs = [];
     }
 
     isInitialized() {
@@ -54,6 +95,25 @@ const ConnectedWidget = forwardRef((props, ref) => {
       }
     }
 
+    // createSocket() {
+    //   let cable = Cable.createConsumer('ws://localhost:3000/cable');
+    //   this.chats = cable.subscriptions.create({
+    //     channel: 'ConversationsChannel', convo_unq_id: this.convo_unq_id
+    //   }, {
+    //     connected: () => {},
+    //     received: (data) => {
+    //       debugger
+    //       let chatLogs = this.chatLogs;
+    //       chatLogs.push(JSON.parse(data));
+    //       this.chatLogs = chatLogs
+    //     },
+    //     create: function(chatContent) {
+    //       this.perform('create', {
+    //         content: chatContent
+    //       });
+    //     }
+    //   });
+    // }
     createSocket() {
       this.socket = socket(
         this.url,
@@ -81,14 +141,39 @@ const ConnectedWidget = forwardRef((props, ref) => {
     }
   }
 
-  const sock = new Socket(
-    props.socketUrl,
-    props.customData,
-    props.socketPath,
-    props.protocol,
-    props.protocolOptions,
-    props.onSocketEvent
-  );
+
+  const sock = Cable.createConsumer('ws://localhost:3000/cable').subscriptions.create({
+    channel: 'ConversationsChannel', convo_unq_id: uuid()
+  }, {
+    connected: () => {},
+    received: (data) => {
+      store.dispatch(addResponseMessage(JSON.parse(data).message.text))
+      // let chatLogs = this.chatLogs;
+      // chatLogs.push(JSON.parse(data));
+      // this.chatLogs = chatLogs
+    },
+    create: function(chatContent) {
+      this.perform('create', {
+        content: chatContent
+      });
+    },
+    createSocket: () => {},
+    on: () => {},
+    close: () => {},
+    emit: function(message, data) {
+      this.perform('create', {
+        content: message
+      });
+    }
+  });
+  // const sock = new Socket(
+  //   props.socketUrl,
+  //   props.customData,
+  //   // props.socketPath,
+  //   // props.protocol,
+  //   // props.protocolOptions,
+  //   // props.onSocketEvent
+  // );
 
   const storage =
     props.params.storage === 'session' ? sessionStorage : localStorage;
@@ -142,6 +227,7 @@ const ConnectedWidget = forwardRef((props, ref) => {
 });
 
 ConnectedWidget.propTypes = {
+  convo_unq_id: PropTypes.string,
   initPayload: PropTypes.string,
   title: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
   subtitle: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),

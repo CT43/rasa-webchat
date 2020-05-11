@@ -17,20 +17,23 @@
   <div style="width: 400px; height: 2000px; border: 3px solid lightsalmon;" id="webchat" />
 <script>
   WebChat.default.init({
+    title: "Violet",
+    // subtitle: "contextual assistant",
+    showMessageDate: true,
     // embedded: true,
     selector: "#webchat",
-    initPayload: "/intro_registered_accounts",
-    socketUrl: "http://localhost:5005/",
-    tooltipPayload: "/tooltip_registered_accounts",
-    tooltipDelay: 40000,
-    socketPath: "/socket.io/",
+    initPayload: "/hello",
+    socketUrl: "http://localhost:3000/",
+    // tooltipPayload: "/tooltip_registered_accounts",
+    // tooltipDelay: 40000,
+    socketPath: "/cable",
     customData: {
       language: 'en'
     },
-    subtitle: 'A',
+    // subtitle: 'A',
     inputTextFieldHint: "Type a message...",
-    connectingText: "Waiting for server...",
-    profileAvatar: "https://storage.googleapis.com/dev-media-store-botfront-cloud/logo_square_circle_white_bg256.jpg",
+    // connectingText: "Waiting for server...",
+    // profileAvatar: "https://storage.googleapis.com/dev-media-store-botfront-cloud/logo_square_circle_white_bg256.jpg",
     hideWhenNotConnected: false,
   //   defaultHighlightAnimation: `@-webkit-keyframes default-botfront-blinker-animation {
   //     from {

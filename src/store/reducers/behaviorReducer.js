@@ -11,11 +11,11 @@ export default function (
   onWidgetEvent = {},
 ) {
   const initialState = Map({
-    connected: false,
-    initialized: false,
+    connected: true,
+    initialized: true,
     isChatVisible: true,
     isChatOpen: false,
-    disabledInput: true,
+    disabledInput: false,
     docViewer,
     inputTextFieldHint,
     connectingText,

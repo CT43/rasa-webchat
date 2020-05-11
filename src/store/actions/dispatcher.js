@@ -14,11 +14,11 @@ export function initialize() {
 }
 
 export function connect() {
-  store.dispatch(actions.connect());
+  store.dispatch(actions.connectServer());
 }
 
 export function disconnect() {
-  store.dispatch(actions.disconnect());
+  store.dispatch(actions.disconnectServer());
 }
 
 export function addUserMessage(text) {

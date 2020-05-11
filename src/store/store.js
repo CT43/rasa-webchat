@@ -132,7 +132,7 @@ function initStore(
 
   return createStore(
     reducer,
-    composeEnhancer(applyMiddleware(customMiddleWare)),
+    // composeEnhancer(applyMiddleware(customMiddleWare)),
   );
 }
 
