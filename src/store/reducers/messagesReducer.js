@@ -22,6 +22,7 @@ export default function (storage) {
     switch (action.type) {
       // Each change to the redux store's message list gets recorded to storage
       case actionTypes.ADD_NEW_USER_MESSAGE: {
+        
         return storeMessage(state.push(createNewMessage(action.text, MESSAGE_SENDER.CLIENT)));
       }
       case actionTypes.ADD_NEW_RESPONSE_MESSAGE: {
@@ -52,6 +53,7 @@ export default function (storage) {
         return storeMessage(initialState);
       }
       case actionTypes.EMIT_MESSAGE_IF_FIRST: {
+        
         if (state.size === 0) {
           if (action.text) {
             return storeMessage(state.push(createNewMessage(action.text, MESSAGE_SENDER.CLIENT)));
@@ -76,4 +78,3 @@ export default function (storage) {
     }
   };
 }
-

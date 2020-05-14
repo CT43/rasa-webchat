@@ -49,6 +49,7 @@ class Widget extends Component {
     this.sendMessage = this.sendMessage.bind(this);
     this.intervalId = null;
     this.eventListenerCleaner = () => { };
+    this.convo_unq_id = props.newuuid
   }
 
 
@@ -117,7 +118,7 @@ class Widget extends Component {
   }
 
   sendMessage(payload, text = '', when = 'always') {
-    debugger
+
 
     const { dispatch, initialized } = this.props;
     const emit = () => {
@@ -138,7 +139,7 @@ class Widget extends Component {
   }
 
   handleMessageReceived(messageWithMetadata) {
-    debugger
+
     const { dispatch, isChatOpen, disableTooltips } = this.props;
     // we extract metadata so we are sure it does not interfer with type checking of the message
     const { metadata, ...message } = messageWithMetadata;
@@ -217,7 +218,7 @@ class Widget extends Component {
   }
 
   handleBotUtterance(botUtterance) {
-    debugger
+
     const { dispatch } = this.props;
     this.clearCustomStyle();
     this.eventListenerCleaner();
@@ -549,12 +550,13 @@ class Widget extends Component {
   }
 
   handleMessageSubmit(event) {
-    // debugger
+    //
     event.preventDefault();
-    this.props.socket.emit(event.target.message.value)
+    // this.props.socket.emit(event.target.message.value)
     // Use below once you get receiving and use redux correctly
     const userUttered = event.target.message.value;
     if (userUttered) {
+
       this.props.dispatch(addUserMessage(userUttered));
       this.props.dispatch(emitUserMessage(userUttered));
     }

@@ -1,6 +1,14 @@
 import { store } from '../../index';
 import * as actions from './index';
 
+export function setConvoUnqId(text) {
+  return store.dispatch(actions.setConvoUnqId(text));
+}
+
+export function getConvoUnqId() {
+  return store.dispatch(actions.getConvoUnqId());
+}
+
 export function isOpen() {
   return store.dispatch(actions.getOpenState());
 }
@@ -26,6 +34,7 @@ export function addUserMessage(text) {
 }
 
 export function emitUserMessage(text) {
+  
   store.dispatch(actions.emitUserMessage(text));
 }
 

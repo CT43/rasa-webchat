@@ -8,12 +8,12 @@
 }
 
 .#{$namespace}widget-container {
-  
+
   .#{$namespace}conversation-container{
       @media screen and (min-width: 800px){
           margin-bottom: 10px;
       }
-  
+
       ul {
           padding-left: 10px;
           list-style: disc;
@@ -33,14 +33,14 @@
   border-radius: 50%;
   box-shadow: 0px 2px 10px 1px $grey-3;
   height: 60px;
-  margin: 0;
+  margin: 0 8px 0 0;
   width: 60px;
   box-sizing: border-box;
 
   &:focus {
     outline: none;
   }
-  
+
   &.#{$namespace}hide {
     display: none
   }
@@ -48,7 +48,7 @@
   &.#{$namespace}full-screen {
     @include launcher-fs;
   }
-  
+
   img {
     width: 70%;
     max-height: 70%;
@@ -103,7 +103,7 @@
       @include replies;
       margin-left: 4px;
     }
-    
+
     .#{$namespace}reply {
       @include reply;
     }

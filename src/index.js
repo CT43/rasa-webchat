@@ -1,4 +1,4 @@
-import React, { forwardRef } from 'react';
+import React, { forwardRef, Component } from 'react';
 import PropTypes from 'prop-types';
 import { Provider } from 'react-redux';
 import Cable from 'actioncable';
@@ -40,7 +40,9 @@ import {
   changeOldUrl,
   setDomHighlight,
   evalUrl,
-  setCustomCss
+  setCustomCss,
+  setConvoUnqId,
+  getConvoUnqId
 } from 'actions';
 
 // eslint-disable-next-line import/no-mutable-exports
@@ -102,7 +104,7 @@ const ConnectedWidget = forwardRef((props, ref) => {
     //   }, {
     //     connected: () => {},
     //     received: (data) => {
-    //       debugger
+    //
     //       let chatLogs = this.chatLogs;
     //       chatLogs.push(JSON.parse(data));
     //       this.chatLogs = chatLogs
@@ -141,11 +143,15 @@ const ConnectedWidget = forwardRef((props, ref) => {
     }
   }
 
+  const new_uuid = uuid()
+
 
   const sock = Cable.createConsumer('ws://localhost:3000/cable').subscriptions.create({
-    channel: 'ConversationsChannel', convo_unq_id: uuid()
+    channel: 'ConversationsChannel', convo_unq_id: new_uuid
   }, {
-    connected: () => {},
+    connected: function() {
+      store.dispatch(setConvoUnqId(new_uuid))
+    },
     received: (data) => {
       store.dispatch(addResponseMessage(JSON.parse(data).message.text))
       // let chatLogs = this.chatLogs;
@@ -160,7 +166,7 @@ const ConnectedWidget = forwardRef((props, ref) => {
     createSocket: () => {},
     on: () => {},
     close: () => {},
-    emit: function(message, data) {
+    emit: function(message) {
       this.perform('create', {
         content: message
       });
@@ -213,6 +219,7 @@ const ConnectedWidget = forwardRef((props, ref) => {
         customComponent={props.customComponent}
         displayUnreadCount={props.displayUnreadCount}
         socket={sock}
+        newuuid={new_uuid}
         showMessageDate={props.showMessageDate}
         customMessageDelay={props.customMessageDelay}
         tooltipPayload={props.tooltipPayload}

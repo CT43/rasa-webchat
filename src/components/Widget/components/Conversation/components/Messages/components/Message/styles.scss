@@ -3,23 +3,23 @@
 @import "common.scss";
 
 .#{$namespace}conversation-container {
-  
+
   .#{$namespace}message {
     margin: 10px;
-    font-size: 16px;
+    font-size: 14px;
     line-height: 20px;
     display: flex;
     font-family: $fontfamily;
     flex-wrap: wrap;
     position: relative;
-  
+
     .#{$namespace}markdown {
       p {
         margin: 0;
       }
     }
   }
-  
+
   .#{$namespace}client {
     @include message-bubble($blue-1, $white);
     background-color: $tertiary !important;
@@ -30,12 +30,12 @@
       color: $turqois-1;
     }
   }
-  
+
   .#{$namespace}response {
     @include message-bubble($grey-2, #000, 0 15px 15px 15px);
     overflow-wrap: break-word;
   }
-  
+
   /* For markdown elements created with default styles */
   .#{$namespace}message-text {
     margin: 0;

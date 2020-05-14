@@ -5,8 +5,8 @@ $fontfamily: 'Inter', sans-serif;
 @mixin message-bubble($color, $textColor, $borderRadius: 15px) {
   background-color: $color;
   color: $textColor;
-  border-radius: $borderRadius;
-  padding: 11px 15px;
+  border-radius: 41px;
+  padding: 5px 13px;
   max-width: 215px;
   text-align: left;
   font-family: $fontfamily;

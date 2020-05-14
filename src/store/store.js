@@ -27,6 +27,7 @@ function initStore(
   storage,
   docViewer = false,
   onWidgetEvent,
+  convo_unq_id
 ) {
   const customMiddleWare = store => next => (action) => {
     let sessionId = getLocalSession(storage, SESSION_NAME)
@@ -36,7 +37,14 @@ function initStore(
       sessionId = socket.sessionId;
     }
     switch (action.type) {
+      // case actionTypes.GET_CONVO_UNQ_ID: {
+      //
+      //   JSON.parse(socket.identifier).convo_unq_id
+      //
+      // }
       case actionTypes.EMIT_NEW_USER_MESSAGE: {
+        // NEXT SCOPE OUT SESSION
+        socket.emit(action.text)
         const emit = () => socket.emit(
           'user_uttered', {
             message: action.text,
@@ -54,6 +62,9 @@ function initStore(
         break;
       }
       case actionTypes.EMIT_MESSAGE_IF_FIRST: {
+
+        socket.emit("hello")
+
         if (store.getState().messages.size === 0) {
           socket.emit('user_uttered', {
             message: action.payload,
@@ -132,7 +143,7 @@ function initStore(
 
   return createStore(
     reducer,
-    // composeEnhancer(applyMiddleware(customMiddleWare)),
+    composeEnhancer(applyMiddleware(customMiddleWare)),
   );
 }
 

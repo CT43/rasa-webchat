@@ -27,6 +27,7 @@ export default function (socketUrl, customData, _path, options) {
   };
 
   socketProxy.on('user_uttered', (data) => {
+    
     send({
       type: 'CHAT',
       content: JSON.stringify(data),
