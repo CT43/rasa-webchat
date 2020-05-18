@@ -1,6 +1,14 @@
 import { store } from '../../index';
 import * as actions from './index';
 
+export function createEvents(eventName, callback) {
+  return store.dispatch(actions.createEvents(eventName, callback));
+}
+
+export function getEvents() {
+  return store.dispatch(actions.getEvents());
+}
+
 export function setConvoUnqId(text) {
   return store.dispatch(actions.setConvoUnqId(text));
 }
@@ -34,7 +42,7 @@ export function addUserMessage(text) {
 }
 
 export function emitUserMessage(text) {
-  
+
   store.dispatch(actions.emitUserMessage(text));
 }
 

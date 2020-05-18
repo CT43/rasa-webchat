@@ -22,7 +22,8 @@ export function isImage(message) {
 }
 
 export function isText(message) {
-  return Object.keys(message).length === 1 && Object.keys(message).includes('text');
+  debugger
+  return Object.keys(message).length === 6 && Object.keys(message).includes('text');
 }
 
 export function isQR(message) {

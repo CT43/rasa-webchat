@@ -164,7 +164,7 @@ Messages.propTypes = {
 };
 
 Message.defaultTypes = {
-  displayTypingIndication: false
+  displayTypingIndication: true
 };
 
 export default connect(store => ({

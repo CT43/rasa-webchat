@@ -1,5 +1,19 @@
 import * as actions from './actionTypes';
 
+export function createEvents(eventName, callback) {
+  return {
+    type: actions.CREATE_EVENTS,
+    eventName,
+    callback
+  };
+}
+
+export function getEvents() {
+  return {
+    type: actions.GET_EVENTS,
+  };
+}
+
 export function setConvoUnqId(text) {
   return {
     type: actions.SET_CONVO_UNQ_ID,
@@ -9,7 +23,7 @@ export function setConvoUnqId(text) {
 
 export function getConvoUnqId() {
   return {
-    type: actions.GET_CONVO_UNQ_ID    
+    type: actions.GET_CONVO_UNQ_ID
   };
 }
 
@@ -101,7 +115,7 @@ export function addUserMessage(text) {
 }
 
 export function emitUserMessage(text) {
-  
+
   return {
     type: actions.EMIT_NEW_USER_MESSAGE,
     text
@@ -109,7 +123,7 @@ export function emitUserMessage(text) {
 }
 
 export function emitMessageIfFirst(payload, text = null) {
-  
+
   return {
     type: actions.EMIT_MESSAGE_IF_FIRST,
     payload,

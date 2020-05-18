@@ -42,13 +42,16 @@ import {
   evalUrl,
   setCustomCss,
   setConvoUnqId,
-  getConvoUnqId
+  getConvoUnqId,
+  createEvents,
+  getEvents
 } from 'actions';
 
 // eslint-disable-next-line import/no-mutable-exports
 export let store = null;
 
 const ConnectedWidget = forwardRef((props, ref) => {
+
 
   class Socket {
     constructor(
@@ -146,40 +149,183 @@ const ConnectedWidget = forwardRef((props, ref) => {
   const new_uuid = uuid()
 
 
-  const sock = Cable.createConsumer('ws://localhost:3000/cable').subscriptions.create({
-    channel: 'ConversationsChannel', convo_unq_id: new_uuid
-  }, {
-    connected: function() {
-      store.dispatch(setConvoUnqId(new_uuid))
-    },
-    received: (data) => {
-      store.dispatch(addResponseMessage(JSON.parse(data).message.text))
-      // let chatLogs = this.chatLogs;
-      // chatLogs.push(JSON.parse(data));
-      // this.chatLogs = chatLogs
-    },
-    create: function(chatContent) {
-      this.perform('create', {
-        content: chatContent
-      });
-    },
-    createSocket: () => {},
-    on: () => {},
-    close: () => {},
-    emit: function(message) {
-      this.perform('create', {
-        content: message
-      });
+  class Sock {
+    constructor(
+      url,
+      customData,
+      path,
+      protocol,
+      protocolOptions,
+      onSocketEvent,
+      convo_unq_id
+    ) {
+      this.url = 'ws://localhost:3000/cable';
+      this.customData = customData;
+      this.path = '/cable';
+      this.protocol = protocol;
+      this.protocolOptions = protocolOptions;
+      this.onSocketEvent = onSocketEvent;
+      this.socket = null;
+      this.onEvents = [];
+      this.marker = Math.random();
+      this.convo_unq_id = uuid();
+      this.chatLogs = [];
     }
-  });
-  // const sock = new Socket(
-  //   props.socketUrl,
-  //   props.customData,
-  //   // props.socketPath,
-  //   // props.protocol,
-  //   // props.protocolOptions,
-  //   // props.onSocketEvent
-  // );
+    /////////////// Below are what get called to then call that on the socket (CABLE) in createSocket
+    isInitialized() {
+      return this.socket;
+    }
+
+    on(event, callback) {
+      if (!this.socket) {
+        this.onEvents.push({ event, callback });
+      } else {
+        this.socket.on(event, callback);
+      }
+    }
+
+    emit(message, data) {
+      if (this.socket) {
+        this.socket.emit(message, data);
+      }
+    }
+
+    close() {
+      if (this.socket) {
+        this.socket.close();
+      }
+    }
+
+    createEvent(sockle, event, callback) {
+      if (!this.socket) {
+        this.onEvents.push({ event, callback });
+      } else {
+        this.socket.createEvent(sockle, event, callback);
+      }
+    }
+
+    // createSocket() {
+    //   let cable = Cable.createConsumer('ws://localhost:3000/cable');
+    //   this.chats = cable.subscriptions.create({
+    //     channel: 'ConversationsChannel', convo_unq_id: this.convo_unq_id
+    //   }, {
+    //     connected: () => {},
+    //     received: (data) => {
+    //
+    //       let chatLogs = this.chatLogs;
+    //       chatLogs.push(JSON.parse(data));
+    //       this.chatLogs = chatLogs
+    //     },
+    //     create: function(chatContent) {
+    //       this.perform('create', {
+    //         content: chatContent
+    //       });
+    //     }
+    //   });
+    // }
+
+    // Alright this is where everything functionality wise starts
+    // on all but received - you can pass in the sock object itself to save data but received you cant since it's coming from api
+    // solution to this is storing the event that seems to start it all - bot utterence - in redux store, then pulling it out and executing it
+    // will likely have to do this with other shit
+    createSocket(sockle) {
+       this.socket = Cable.createConsumer('ws://localhost:3000/cable').subscriptions.create({
+          channel: 'ConversationsChannel', convo_unq_id: new_uuid, sockle: sockle
+        }, {
+          connected: function() {
+            store.dispatch(setConvoUnqId(new_uuid))
+          },
+          received: function(data) {
+            let eve = store.getState('created_events').metadata
+            let handlebu = eve._root.entries[7][1]
+            debugger
+            if (handlebu['bot_uttered']) {
+              handlebu['bot_uttered'](JSON.parse(data).message)
+            } else {
+              handlebu(JSON.parse(data).message)
+            }
+            // store.dispatch(addResponseMessage(JSON.parse(data).message.text))
+            // let chatLogs = this.chatLogs;
+            // chatLogs.push(JSON.parse(data));
+            // this.chatLogs = chatLogs
+          },
+          create: function(chatContent) {
+            this.perform('create', {
+              content: chatContent
+            });
+          },
+          createSocket: () => {},
+          createEvent: (sockle, eventName, callback) => {
+            store.dispatch(createEvents(eventName, callback))
+          },
+          on: (event, callback) => {
+            return "lalala"
+          },
+          close: () => {},
+          emit: function(message) {
+            this.perform('create', {
+              content: message
+            });
+          }
+        });
+      // We set a function on session_confirm here so as to avoid any race condition
+      // this will be called first and will set those parameters for everyone to use.
+      this.socket.on('session_confirm', (sessionObject) => {
+        this.sessionConfirmed = true;
+        this.sessionId = (sessionObject && sessionObject.session_id)
+          ? sessionObject.session_id
+          : sessionObject;
+      });
+      this.onEvents.forEach((event) => {
+        this.socket.on(event.event, event.callback);
+      });
+      //
+      this.onEvents = [];
+      // Object.keys(this.onSocketEvent).forEach((event) => {
+      //   this.socket.on(event, this.onSocketEvent[event]);
+      // });
+    }
+  }
+
+  // .subscriptions.create({
+  //   channel: 'ConversationsChannel', convo_unq_id: new_uuid
+  // }, {
+  //   connected: function() {
+  //     store.dispatch(setConvoUnqId(new_uuid))
+  //   },
+  //   received: (data) => {
+  //     store.dispatch(addResponseMessage(JSON.parse(data).message.text))
+  //
+  //     // let chatLogs = this.chatLogs;
+  //     // chatLogs.push(JSON.parse(data));
+  //     // this.chatLogs = chatLogs
+  //   },
+  //   create: function(chatContent) {
+  //     this.perform('create', {
+  //       content: chatContent
+  //     });
+  //   },
+  //   createSocket: () => {},
+  //   on: (event, callback) => {
+  //     "botUttered"
+  //   },
+  //   close: () => {},
+  //   emit: function(message) {
+  //     this.perform('create', {
+  //       content: message
+  //     });
+  //   }
+  // });
+
+
+  const sock = new Sock(
+    props.socketUrl,
+    props.customData,
+    // props.socketPath,
+    // props.protocol,
+    // props.protocolOptions,
+    // props.onSocketEvent
+  );
 
   const storage =
     props.params.storage === 'session' ? sessionStorage : localStorage;

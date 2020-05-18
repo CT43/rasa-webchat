@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import Cable from 'actioncable';
+import uuid from 'react-uuid';
+import { initStore } from '../../store/store';
 import {
   toggleFullScreen,
   toggleChat,
@@ -31,13 +34,16 @@ import {
   changeOldUrl,
   setDomHighlight,
   evalUrl,
-  setCustomCss
+  setCustomCss,
+  setConvoUnqId
 } from 'actions';
 
 import { SESSION_NAME, NEXT_MESSAGE } from 'constants';
 import { isVideo, isImage, isQR, isText, isCarousel } from './msgProcessor';
 import WidgetLayout from './layout';
 import { storeLocalSession, getLocalSession } from '../../store/reducers/helper';
+export let store = null;
+
 
 class Widget extends Component {
   constructor(props) {
@@ -51,7 +57,6 @@ class Widget extends Component {
     this.eventListenerCleaner = () => { };
     this.convo_unq_id = props.newuuid
   }
-
 
   componentDidMount() {
     const { connectOn, autoClearCache, storage, dispatch, defaultHighlightAnimation } = this.props;
@@ -109,6 +114,8 @@ class Widget extends Component {
     clearInterval(this.intervalId);
   }
 
+
+
   getSessionId() {
     const { storage } = this.props;
     // Get the local session, check if there is an existing session_id
@@ -139,10 +146,12 @@ class Widget extends Component {
   }
 
   handleMessageReceived(messageWithMetadata) {
+    debugger
 
     const { dispatch, isChatOpen, disableTooltips } = this.props;
     // we extract metadata so we are sure it does not interfer with type checking of the message
     const { metadata, ...message } = messageWithMetadata;
+    debugger
     if (!isChatOpen) {
       this.dispatchMessage(message);
       dispatch(newUnreadMessage());
@@ -150,16 +159,19 @@ class Widget extends Component {
         dispatch(showTooltip(true));
         this.applyCustomStyle();
       }
-    } else if (!this.onGoingMessageDelay) {
+    } else if (!this.onGoingMessageDelay) { // usually goes here
+      debugger
       this.onGoingMessageDelay = true;
       dispatch(triggerMessageDelayed(true));
       this.newMessageTimeout(message);
     } else {
+      debugger
       this.messages.push(message);
     }
   }
 
   popLastMessage() {
+    debugger
     const { dispatch } = this.props;
     if (this.messages.length) {
       this.onGoingMessageDelay = true;
@@ -169,10 +181,11 @@ class Widget extends Component {
   }
 
   newMessageTimeout(message) {
+    debugger
     const { dispatch, customMessageDelay } = this.props;
     this.delayedMessage = message;
     this.messageDelayTimeout = setTimeout(() => {
-      this.dispatchMessage(message);
+      this.dispatchMessage(message); //// This is where it cleans and clears message!!!!
       this.delayedMessage = null;
       this.applyCustomStyle();
       dispatch(triggerMessageDelayed(false));
@@ -217,13 +230,13 @@ class Widget extends Component {
     }
   }
 
-  handleBotUtterance(botUtterance) {
+  handleBotUtterance(botUtterance) { // start of receiving a message - what is called from the ActionCable.received
 
     const { dispatch } = this.props;
     this.clearCustomStyle();
     this.eventListenerCleaner();
     dispatch(clearMetadata());
-    if (botUtterance.metadata) this.propagateMetadata(botUtterance.metadata);
+    // if (botUtterance.metadata) this.propagateMetadata(botUtterance.metadata);
     const newMessage = { ...botUtterance, text: String(botUtterance.text) };
     if (botUtterance.metadata && botUtterance.metadata.customCss) {
       newMessage.customCss = botUtterance.metadata.customCss;
@@ -342,13 +355,47 @@ class Widget extends Component {
       tooltipDelay
     } = this.props;
 
-    if (socket) {
-      socket.createSocket();
 
-      socket.on('bot_uttered', (botUttered) => {
+    // const new_uuid = uuid()
+    //
+    //
+    //
+    // const socket = Cable.createConsumer('ws://localhost:3000/cable').subscriptions.create({
+    //   channel: 'ConversationsChannel', convo_unq_id: new_uuid
+    // }, {
+    //   connected: function() {
+    //     dispatch(setConvoUnqId(new_uuid))
+    //   },
+    //   received: (data) => {
+    //     dispatch(addResponseMessage(JSON.parse(data).message.text))
+    //
+    //     // let chatLogs = this.chatLogs;
+    //     // chatLogs.push(JSON.parse(data));
+    //     // this.chatLogs = chatLogs
+    //   },
+    //   create: function(chatContent) {
+    //     this.perform('create', {
+    //       content: chatContent
+    //     });
+    //   },
+    //   createSocket: () => {},
+    //   on: (event, callback) => {
+    //     "botUttered"
+    //   },
+    //   close: () => {},
+    //   emit: function(message) {
+    //     this.perform('create', {
+    //       content: message
+    //     });
+    //   }
+    // });
+
+    if (socket) {
+      socket.createSocket(socket);
+      socket.createEvent(socket, 'bot_uttered', (botUttered) => { //below is essentially creating the event "bot_uttered" for the socket - it's implementing the callback when it receives said event - this event gets created a step above in socket
         // botUttered.attachment.payload.elements = [botUttered.attachment.payload.elements];
         // console.log(botUttered);
-        this.handleBotUtterance(botUttered);
+        this.handleBotUtterance(botUttered); // follow here
       });
 
       dispatch(pullSession());
@@ -508,14 +555,17 @@ class Widget extends Component {
   }
 
   dispatchMessage(message) {
+    debugger
     if (Object.keys(message).length === 0) {
       return;
     }
     const { customCss, ...messageClean } = message;
 
-    if (isText(messageClean)) {
+    if (isText(messageClean)) { // imported methods from msgprocessor - search - this is what will have to change to allow for cables format rather than socket
+      debugger
       this.props.dispatch(addResponseMessage(messageClean.text));
     } else if (isQR(messageClean)) {
+      debugger
       this.props.dispatch(addQuickReply(messageClean));
     } else if (isCarousel(messageClean)) {
       this.props.dispatch(

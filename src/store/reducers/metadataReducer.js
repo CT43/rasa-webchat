@@ -10,7 +10,8 @@ export default function (storage) {
     domHighlight: Map(),
     hintText: '',
     showTooltip: false,
-    convo_unq_id: ''
+    convo_unq_id: '',
+    created_events: []
   });
 
   const initialState = Map({
@@ -23,6 +24,13 @@ export default function (storage) {
       // Each change to the redux store's behavior Map gets recorded to storage
       case actionTypes.SET_CONVO_UNQ_ID: {
         return storeMetadata(state.set('convo_unq_id', action.text));
+      }
+      case actionTypes.CREATE_EVENTS: {
+        return storeMetadata(state.set('created_events', state.get('created_events')[action.eventName] = action.callback));
+      }
+      case actionTypes.GET_EVENTS: {
+        debugger
+        return (state.get('created_events'))
       }
       case actionTypes.CLEAR_METADATA: {
         return storeMetadata(state.merge(defaultValues)); // reset metadata to its default values
