@@ -76,6 +76,7 @@ export default function (
         return storeParams(state.set('connected', false).set('disabledInput', true));
       }
       case actionTypes.INITIALIZE: {
+        debugger
         return storeParams(state.set('initialized', true));
       }
       case actionTypes.NEW_UNREAD_MESSAGE: {
@@ -109,6 +110,7 @@ export default function (
         const connected = state.get('connected');
         const messageDelayed = state.get('messageDelayed');
         if (localSession && localSession.params) {
+          debugger
           return fromJS({ ...localSession.params, connected, messageDelayed });
         }
         return state;

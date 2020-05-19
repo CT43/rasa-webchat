@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import Cable from 'actioncable';
-import uuid from 'react-uuid';
-import { initStore } from '../../store/store';
 import {
   toggleFullScreen,
   toggleChat,
@@ -45,6 +42,7 @@ import { storeLocalSession, getLocalSession } from '../../store/reducers/helper'
 export let store = null;
 
 
+
 class Widget extends Component {
   constructor(props) {
     super(props);
@@ -54,12 +52,12 @@ class Widget extends Component {
     this.onGoingMessageDelay = false;
     this.sendMessage = this.sendMessage.bind(this);
     this.intervalId = null;
-    this.eventListenerCleaner = () => { };
-    this.convo_unq_id = props.newuuid
-  }
+    this.eventListenerCleaner = () => { }
+    }
 
   componentDidMount() {
     const { connectOn, autoClearCache, storage, dispatch, defaultHighlightAnimation } = this.props;
+    debugger
 
     // add the default highlight css to the document
     const styleNode = document.createElement('style');
@@ -78,25 +76,28 @@ class Widget extends Component {
 
     if (autoClearCache) {
       if (Date.now() - lastUpdate < 30 * 60 * 1000) {
+        debugger
         this.initializeWidget();
       } else {
         localStorage.removeItem(SESSION_NAME);
       }
     } else {
       dispatch(pullSession());
+      debugger
       if (lastUpdate) this.initializeWidget();
     }
   }
 
   componentDidUpdate() {
     const { isChatOpen, dispatch, embedded, initialized } = this.props;
-
-    if (isChatOpen) {
-      if (!initialized) {
-        this.initializeWidget();
-      }
-      this.trySendInitPayload();
-    }
+    debugger
+    // if (isChatOpen) {
+    //   if (!initialized) {
+    //     debugger
+    //     this.initializeWidget();
+    //   }
+    //   this.trySendInitPayload();
+    // }
 
     if (embedded && initialized) {
       dispatch(showChat());
@@ -136,7 +137,10 @@ class Widget extends Component {
         dispatch(emitMessageIfFirst(payload, text));
       }
     };
-    if (!initialized) {
+    // For some reason it's not pulling initialized correctly from state
+    // if (!initialized) {
+    debugger
+    if (initialized) {
       this.initializeWidget(false);
       dispatch(initialize());
       emit();
@@ -231,7 +235,7 @@ class Widget extends Component {
   }
 
   handleBotUtterance(botUtterance) { // start of receiving a message - what is called from the ActionCable.received
-
+    debugger
     const { dispatch } = this.props;
     this.clearCustomStyle();
     this.eventListenerCleaner();
@@ -344,6 +348,7 @@ class Widget extends Component {
   }
 
   initializeWidget(sendInitPayload = true) {
+    debugger
     const {
       storage,
       socket,
@@ -389,20 +394,22 @@ class Widget extends Component {
     //     });
     //   }
     // });
-
+    debugger
     if (socket) {
-      socket.createSocket(socket);
-      socket.createEvent(socket, 'bot_uttered', (botUttered) => { //below is essentially creating the event "bot_uttered" for the socket - it's implementing the callback when it receives said event - this event gets created a step above in socket
+      debugger
+      socket.createSocket();
+      socket.createEvent('bot_uttered', (botUttered) => { //below is essentially creating the event "bot_uttered" for the socket - it's implementing the callback when it receives said event - this event gets created a step above in socket
         // botUttered.attachment.payload.elements = [botUttered.attachment.payload.elements];
         // console.log(botUttered);
         this.handleBotUtterance(botUttered); // follow here
       });
-
+      debugger
       dispatch(pullSession());
+      debugger
 
       // Request a session from server
       const localId = this.getSessionId();
-      socket.on('connect', () => {
+      socket.on('connect', () => { // can use something like this to send first message
         socket.emit('session_request', { session_id: localId });
       });
 
@@ -416,6 +423,7 @@ class Widget extends Component {
         console.log(`session_confirm:${socket.socket.id} session_id:${remoteId}`);
         // Store the initial state to both the redux store and the storage, set connected to true
         dispatch(connectServer());
+        debugger
         /*
         Check if the session_id is consistent with the server
         If the localId is null or different from the remote_id,
@@ -433,18 +441,20 @@ class Widget extends Component {
         } else {
           // If this is an existing session, it's possible we changed pages and want to send a
           // user message when we land.
+          debugger
           const nextMessage = window.localStorage.getItem(NEXT_MESSAGE);
 
           if (nextMessage !== null) {
             const { message, expiry } = JSON.parse(nextMessage);
             window.localStorage.removeItem(NEXT_MESSAGE);
-
+            debugger
             if (expiry === 0 || expiry > Date.now()) {
               dispatch(addUserMessage(message));
               dispatch(emitUserMessage(message));
             }
           }
         } if (connectOn === 'mount' && tooltipPayload) {
+          debugger
           this.tooltipTimeout = setTimeout(() => {
             this.trySendTooltipPayload();
           }, parseInt(tooltipDelay, 10));
@@ -460,10 +470,12 @@ class Widget extends Component {
       });
     }
 
-    if (embedded && initialized) {
+    if (initialized) {
       dispatch(showChat());
-      dispatch(openChat());
+      dispatch(initialize())
+      // dispatch(openChat());
     }
+    debugger
   }
 
   // TODO: Need to erase redux store on load if localStorage
@@ -495,6 +507,7 @@ class Widget extends Component {
       // eslint-disable-next-line no-console
       console.log('sending init payload', sessionId);
       socket.emit('user_uttered', { message: initPayload, customData, session_id: sessionId });
+      debugger
       dispatch(initialize());
     }
   }
@@ -523,6 +536,7 @@ class Widget extends Component {
   }
 
   toggleConversation() {
+    debugger
     const {
       isChatOpen,
       dispatch,
@@ -697,6 +711,7 @@ Widget.defaultProps = {
   isChatVisible: true,
   fullScreenMode: false,
   connectOn: 'mount',
+  initialized: false,
   autoClearCache: false,
   displayUnreadCount: false,
   tooltipPayload: null,

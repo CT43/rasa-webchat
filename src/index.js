@@ -8,7 +8,7 @@ import uuid from 'react-uuid';
 import { connect } from 'react-redux';
 import Widget from './components/Widget';
 import { initStore } from '../src/store/store';
-import socket from './socket';
+// import socket from './socket';
 import { storeLocalSession, getLocalSession } from './store/reducers/helper';
 import {
   toggleFullScreen,
@@ -173,6 +173,7 @@ const ConnectedWidget = forwardRef((props, ref) => {
     }
     /////////////// Below are what get called to then call that on the socket (CABLE) in createSocket
     isInitialized() {
+      debugger
       return this.socket;
     }
 
@@ -196,11 +197,11 @@ const ConnectedWidget = forwardRef((props, ref) => {
       }
     }
 
-    createEvent(sockle, event, callback) {
+    createEvent(event, callback) {
       if (!this.socket) {
         this.onEvents.push({ event, callback });
       } else {
-        this.socket.createEvent(sockle, event, callback);
+        this.socket.createEvent(event, callback);
       }
     }
 
@@ -228,14 +229,18 @@ const ConnectedWidget = forwardRef((props, ref) => {
     // on all but received - you can pass in the sock object itself to save data but received you cant since it's coming from api
     // solution to this is storing the event that seems to start it all - bot utterence - in redux store, then pulling it out and executing it
     // will likely have to do this with other shit
-    createSocket(sockle) {
+    createSocket() {
+      debugger
        this.socket = Cable.createConsumer('ws://localhost:3000/cable').subscriptions.create({
-          channel: 'ConversationsChannel', convo_unq_id: new_uuid, sockle: sockle
+          channel: 'ConversationsChannel', convo_unq_id: new_uuid
         }, {
           connected: function() {
+            debugger
             store.dispatch(setConvoUnqId(new_uuid))
+            debugger
           },
           received: function(data) {
+            debugger
             let eve = store.getState('created_events').metadata
             let handlebu = eve._root.entries[7][1]
             debugger
@@ -255,13 +260,13 @@ const ConnectedWidget = forwardRef((props, ref) => {
             });
           },
           createSocket: () => {},
-          createEvent: (sockle, eventName, callback) => {
+          createEvent: (eventName, callback) => {
             store.dispatch(createEvents(eventName, callback))
           },
           on: (event, callback) => {
             return "lalala"
           },
-          close: () => {},
+          // close: () => {},
           emit: function(message) {
             this.perform('create', {
               content: message
@@ -330,6 +335,7 @@ const ConnectedWidget = forwardRef((props, ref) => {
   const storage =
     props.params.storage === 'session' ? sessionStorage : localStorage;
   if (!store || sock.marker !== store.socketRef) {
+    debugger
     store = initStore(
       props.inputTextFieldHint,
       props.connectingText,
@@ -365,7 +371,6 @@ const ConnectedWidget = forwardRef((props, ref) => {
         customComponent={props.customComponent}
         displayUnreadCount={props.displayUnreadCount}
         socket={sock}
-        newuuid={new_uuid}
         showMessageDate={props.showMessageDate}
         customMessageDelay={props.customMessageDelay}
         tooltipPayload={props.tooltipPayload}
