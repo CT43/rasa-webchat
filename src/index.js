@@ -250,40 +250,33 @@ const ConnectedWidget = forwardRef((props, ref) => {
             let cui = JSON.parse(this.identifier).convo_session_uid
             store.dispatch(setConvoUnqId(cui))
 
+            if (localStorage.getItem('convo_session_uid') !== cui) { // If it's a new session preform client initialized for the greeting
+              this.perform('client_initialized')
+            }
+
             localStorage.setItem('convo_session_uid', cui)
 
             let created_events = store.getState().viCreatedEvents
 
-            if (created_events["connected"]) {
-              created_events["connected"]()
-            }
+            // if (created_events["session_confirm"]) {
+            //   created_events["session_confirm"](cui)
+            // }
 
-            true
-
-          },
-          session_request: function(session_id) {
-              this.perform('session_request', {
-                session_id: session_id
-              })
           },
           received: function(data) {
             let parsed_data = JSON.parse(data)
             let msg_format_attrs = parsed_data.message.msg_format_attr
             let who_uttered = msg_format_attrs.who_uttered
-            debugger
 
             let created_events = store.getState().viCreatedEvents
 
             if (who_uttered && who_uttered === "bot_uttered" && created_events[`${who_uttered}`]) {
-
               created_events[`${who_uttered}`](JSON.parse(data).message) // This is sending the event to "bot_uttered which was set in the index widget file"
             }
-
 
             // msg_format_attrs.forEach(function(format_attr) => { // Maybe worth it depending
             //
             // })
-
 
           },
           // Make a this.perform('session request thing')

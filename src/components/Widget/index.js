@@ -406,7 +406,7 @@ class Widget extends Component {
       });
 
       // When session_confirm is received from the server:
-      socket.createEvent('session_confirm', (sessionObject) => {
+      socket.createEvent('session_confirm', (sessionObject) => { // this whole callback function does not get called as of now but maybe in future - might not be necessary
         const remoteId = (sessionObject && sessionObject.session_id)
           ? sessionObject.session_id
           : sessionObject;
@@ -487,7 +487,6 @@ class Widget extends Component {
       dispatch
     } = this.props;
 
-
     // Send initial payload when chat is opened or widget is shown
     if (!initialized && connected && ((isChatOpen && isChatVisible) || embedded)) {
       // Only send initial payload if the widget is connected to the server but not yet initialized
@@ -561,7 +560,7 @@ class Widget extends Component {
   }
 
   dispatchMessage(message) {
-
+    debugger
     if (Object.keys(message).length === 0) {
       return;
     }
