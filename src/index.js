@@ -170,11 +170,13 @@ const ConnectedWidget = forwardRef((props, ref) => {
       this.marker = Math.random();
       this.convo_unq_id = uuid();
       this.chatLogs = [];
+      this.created_events = []
     }
     /////////////// Below are what get called to then call that on the socket (CABLE) in createSocket
     isInitialized() {
-      debugger
-      return this.socket;
+
+      return this.socket !== null && this.socket.connected
+      // return this.socket;
     }
 
     on(event, callback) {
@@ -230,20 +232,28 @@ const ConnectedWidget = forwardRef((props, ref) => {
     // solution to this is storing the event that seems to start it all - bot utterence - in redux store, then pulling it out and executing it
     // will likely have to do this with other shit
     createSocket() {
-      debugger
+
        this.socket = Cable.createConsumer('ws://localhost:3000/cable').subscriptions.create({
           channel: 'ConversationsChannel', convo_unq_id: new_uuid
         }, {
           connected: function() {
-            debugger
             store.dispatch(setConvoUnqId(new_uuid))
-            debugger
+            true
+
           },
           received: function(data) {
-            debugger
+            let prefix = "bot_uttered" // for now
+            let created_events = store.getState().violet
+            if (created_events[`${prefix}`]) {
+
+              created_events[`${prefix}`](JSON.parse(data).message)
+            }
+
+
+
             let eve = store.getState('created_events').metadata
             let handlebu = eve._root.entries[7][1]
-            debugger
+
             if (handlebu['bot_uttered']) {
               handlebu['bot_uttered'](JSON.parse(data).message)
             } else {
@@ -254,6 +264,7 @@ const ConnectedWidget = forwardRef((props, ref) => {
             // chatLogs.push(JSON.parse(data));
             // this.chatLogs = chatLogs
           },
+          // Make a this.perform('session request thing')
           create: function(chatContent) {
             this.perform('create', {
               content: chatContent
@@ -264,7 +275,7 @@ const ConnectedWidget = forwardRef((props, ref) => {
             store.dispatch(createEvents(eventName, callback))
           },
           on: (event, callback) => {
-            return "lalala"
+            return true
           },
           // close: () => {},
           emit: function(message) {
@@ -332,10 +343,11 @@ const ConnectedWidget = forwardRef((props, ref) => {
     // props.onSocketEvent
   );
 
+
   const storage =
     props.params.storage === 'session' ? sessionStorage : localStorage;
   if (!store || sock.marker !== store.socketRef) {
-    debugger
+
     store = initStore(
       props.inputTextFieldHint,
       props.connectingText,

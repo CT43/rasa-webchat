@@ -5,6 +5,7 @@ import { SESSION_NAME } from 'constants';
 import behavior from './reducers/behaviorReducer';
 import messages from './reducers/messagesReducer';
 import metadata from './reducers/metadataReducer';
+import violet from './reducers/violetReducer';
 
 import { getLocalSession } from './reducers/helper';
 import * as actionTypes from './actions/actionTypes';
@@ -27,7 +28,8 @@ function initStore(
   storage,
   docViewer = false,
   onWidgetEvent,
-  convo_unq_id
+  convo_unq_id,
+  created_events = []
 ) {
   const customMiddleWare = store => next => (action) => {
     let sessionId = getLocalSession(storage, SESSION_NAME)
@@ -134,7 +136,8 @@ function initStore(
   const reducer = combineReducers({
     behavior: behavior(hintText, connectingText, storage, docViewer, onWidgetEvent),
     messages: messages(storage),
-    metadata: metadata(storage)
+    metadata: metadata(storage),
+    violet: violet(storage)
   });
 
 

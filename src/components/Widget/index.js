@@ -57,7 +57,6 @@ class Widget extends Component {
 
   componentDidMount() {
     const { connectOn, autoClearCache, storage, dispatch, defaultHighlightAnimation } = this.props;
-    debugger
 
     // add the default highlight css to the document
     const styleNode = document.createElement('style');
@@ -76,28 +75,24 @@ class Widget extends Component {
 
     if (autoClearCache) {
       if (Date.now() - lastUpdate < 30 * 60 * 1000) {
-        debugger
         this.initializeWidget();
       } else {
         localStorage.removeItem(SESSION_NAME);
       }
     } else {
       dispatch(pullSession());
-      debugger
       if (lastUpdate) this.initializeWidget();
     }
   }
 
   componentDidUpdate() {
     const { isChatOpen, dispatch, embedded, initialized } = this.props;
-    debugger
-    // if (isChatOpen) {
-    //   if (!initialized) {
-    //     debugger
-    //     this.initializeWidget();
-    //   }
-    //   this.trySendInitPayload();
-    // }
+    if (isChatOpen) {
+      if (!initialized) {
+        this.initializeWidget();
+      }
+      this.trySendInitPayload();
+    }
 
     if (embedded && initialized) {
       dispatch(showChat());
@@ -138,9 +133,8 @@ class Widget extends Component {
       }
     };
     // For some reason it's not pulling initialized correctly from state
-    // if (!initialized) {
-    debugger
-    if (initialized) {
+    if (!initialized) {
+    // if (initialized) {
       this.initializeWidget(false);
       dispatch(initialize());
       emit();
@@ -150,12 +144,10 @@ class Widget extends Component {
   }
 
   handleMessageReceived(messageWithMetadata) {
-    debugger
 
     const { dispatch, isChatOpen, disableTooltips } = this.props;
     // we extract metadata so we are sure it does not interfer with type checking of the message
     const { metadata, ...message } = messageWithMetadata;
-    debugger
     if (!isChatOpen) {
       this.dispatchMessage(message);
       dispatch(newUnreadMessage());
@@ -164,18 +156,18 @@ class Widget extends Component {
         this.applyCustomStyle();
       }
     } else if (!this.onGoingMessageDelay) { // usually goes here
-      debugger
+
       this.onGoingMessageDelay = true;
       dispatch(triggerMessageDelayed(true));
       this.newMessageTimeout(message);
     } else {
-      debugger
+
       this.messages.push(message);
     }
   }
 
   popLastMessage() {
-    debugger
+
     const { dispatch } = this.props;
     if (this.messages.length) {
       this.onGoingMessageDelay = true;
@@ -185,7 +177,7 @@ class Widget extends Component {
   }
 
   newMessageTimeout(message) {
-    debugger
+
     const { dispatch, customMessageDelay } = this.props;
     this.delayedMessage = message;
     this.messageDelayTimeout = setTimeout(() => {
@@ -235,7 +227,7 @@ class Widget extends Component {
   }
 
   handleBotUtterance(botUtterance) { // start of receiving a message - what is called from the ActionCable.received
-    debugger
+
     const { dispatch } = this.props;
     this.clearCustomStyle();
     this.eventListenerCleaner();
@@ -348,7 +340,7 @@ class Widget extends Component {
   }
 
   initializeWidget(sendInitPayload = true) {
-    debugger
+
     const {
       storage,
       socket,
@@ -394,27 +386,27 @@ class Widget extends Component {
     //     });
     //   }
     // });
-    debugger
-    if (socket) {
-      debugger
+
+    if (!socket.isInitialized()) {
+
       socket.createSocket();
       socket.createEvent('bot_uttered', (botUttered) => { //below is essentially creating the event "bot_uttered" for the socket - it's implementing the callback when it receives said event - this event gets created a step above in socket
         // botUttered.attachment.payload.elements = [botUttered.attachment.payload.elements];
         // console.log(botUttered);
         this.handleBotUtterance(botUttered); // follow here
       });
-      debugger
+
       dispatch(pullSession());
-      debugger
+
 
       // Request a session from server
       const localId = this.getSessionId();
-      socket.on('connect', () => { // can use something like this to send first message
+      socket.createEvent('connect', () => { // on session connect it then makes a session request which then it performs the callback below - can really just have a sorter in received for all of this
         socket.emit('session_request', { session_id: localId });
       });
 
       // When session_confirm is received from the server:
-      socket.on('session_confirm', (sessionObject) => {
+      socket.createEvent('session_confirm', (sessionObject) => {
         const remoteId = (sessionObject && sessionObject.session_id)
           ? sessionObject.session_id
           : sessionObject;
@@ -423,7 +415,7 @@ class Widget extends Component {
         console.log(`session_confirm:${socket.socket.id} session_id:${remoteId}`);
         // Store the initial state to both the redux store and the storage, set connected to true
         dispatch(connectServer());
-        debugger
+
         /*
         Check if the session_id is consistent with the server
         If the localId is null or different from the remote_id,
@@ -441,20 +433,20 @@ class Widget extends Component {
         } else {
           // If this is an existing session, it's possible we changed pages and want to send a
           // user message when we land.
-          debugger
+
           const nextMessage = window.localStorage.getItem(NEXT_MESSAGE);
 
           if (nextMessage !== null) {
             const { message, expiry } = JSON.parse(nextMessage);
             window.localStorage.removeItem(NEXT_MESSAGE);
-            debugger
+
             if (expiry === 0 || expiry > Date.now()) {
               dispatch(addUserMessage(message));
               dispatch(emitUserMessage(message));
             }
           }
         } if (connectOn === 'mount' && tooltipPayload) {
-          debugger
+
           this.tooltipTimeout = setTimeout(() => {
             this.trySendTooltipPayload();
           }, parseInt(tooltipDelay, 10));
@@ -472,10 +464,10 @@ class Widget extends Component {
 
     if (initialized) {
       dispatch(showChat());
-      dispatch(initialize())
+      // dispatch(initialize())
       // dispatch(openChat());
     }
-    debugger
+
   }
 
   // TODO: Need to erase redux store on load if localStorage
@@ -495,6 +487,7 @@ class Widget extends Component {
       dispatch
     } = this.props;
 
+
     // Send initial payload when chat is opened or widget is shown
     if (!initialized && connected && ((isChatOpen && isChatVisible) || embedded)) {
       // Only send initial payload if the widget is connected to the server but not yet initialized
@@ -507,7 +500,7 @@ class Widget extends Component {
       // eslint-disable-next-line no-console
       console.log('sending init payload', sessionId);
       socket.emit('user_uttered', { message: initPayload, customData, session_id: sessionId });
-      debugger
+
       dispatch(initialize());
     }
   }
@@ -536,7 +529,6 @@ class Widget extends Component {
   }
 
   toggleConversation() {
-    debugger
     const {
       isChatOpen,
       dispatch,
@@ -569,17 +561,17 @@ class Widget extends Component {
   }
 
   dispatchMessage(message) {
-    debugger
+
     if (Object.keys(message).length === 0) {
       return;
     }
     const { customCss, ...messageClean } = message;
 
     if (isText(messageClean)) { // imported methods from msgprocessor - search - this is what will have to change to allow for cables format rather than socket
-      debugger
+
       this.props.dispatch(addResponseMessage(messageClean.text));
     } else if (isQR(messageClean)) {
-      debugger
+
       this.props.dispatch(addQuickReply(messageClean));
     } else if (isCarousel(messageClean)) {
       this.props.dispatch(

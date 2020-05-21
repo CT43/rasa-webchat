@@ -22,7 +22,7 @@ export function isImage(message) {
 }
 
 export function isText(message) {
-  debugger
+
   return Object.keys(message).length === 6 && Object.keys(message).includes('text');
 }
 
