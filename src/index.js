@@ -61,7 +61,7 @@ const ConnectedWidget = forwardRef((props, ref) => {
   //     protocol,
   //     protocolOptions,
   //     onSocketEvent,
-  //     convo_unq_id
+  //     convo_session_uid
   //   ) {
   //     this.url = 'ws://localhost:3000/cable';
   //     this.customData = customData;
@@ -72,7 +72,7 @@ const ConnectedWidget = forwardRef((props, ref) => {
   //     this.socket = null;
   //     this.onEvents = [];
   //     this.marker = Math.random();
-  //     this.convo_unq_id = uuid();
+  //     this.convo_session_uid = uuid();
   //     this.chatLogs = [];
   //   }
   //
@@ -103,7 +103,7 @@ const ConnectedWidget = forwardRef((props, ref) => {
   //   // createSocket() {
   //   //   let cable = Cable.createConsumer('ws://localhost:3000/cable');
   //   //   this.chats = cable.subscriptions.create({
-  //   //     channel: 'ConversationsChannel', convo_unq_id: this.convo_unq_id
+  //   //     channel: 'ConversationsChannel', convo_session_uid: this.convo_session_uid
   //   //   }, {
   //   //     connected: () => {},
   //   //     received: (data) => {
@@ -157,7 +157,7 @@ const ConnectedWidget = forwardRef((props, ref) => {
       protocol,
       protocolOptions,
       onSocketEvent,
-      convo_unq_id
+      convo_session_uid
     ) {
       this.url = 'ws://localhost:3000/cable';
       this.customData = customData;
@@ -168,7 +168,7 @@ const ConnectedWidget = forwardRef((props, ref) => {
       this.socket = null;
       this.onEvents = [];
       this.marker = Math.random();
-      this.convo_unq_id = uuid();
+      this.convo_session_uid = uuid();
       this.chatLogs = [];
       this.created_events = []
     }
@@ -216,7 +216,7 @@ const ConnectedWidget = forwardRef((props, ref) => {
     // createSocket() {
     //   let cable = Cable.createConsumer('ws://localhost:3000/cable');
     //   this.chats = cable.subscriptions.create({
-    //     channel: 'ConversationsChannel', convo_unq_id: this.convo_unq_id
+    //     channel: 'ConversationsChannel', convo_session_uid: this.convo_session_uid
     //   }, {
     //     connected: () => {},
     //     received: (data) => {
@@ -238,19 +238,19 @@ const ConnectedWidget = forwardRef((props, ref) => {
     // solution to this is storing the event that seems to start it all - bot utterence - in redux store, then pulling it out and executing it
     // will likely have to do this with other shit
     createSocket() {
-      // Get rid of below if you don't want to persist the convo_unq_id on a page reload during dev
-      // Later when dealing with PII and acct info you will need to either have convo_unq_id expire on time limit or revalidate
-      if (localStorage.getItem('convo_unq_id') !== null) {
-        new_uuid = localStorage.getItem('convo_unq_id')
+      // Get rid of below if you don't want to persist the convo_session_uid on a page reload during dev
+      // Later when dealing with PII and acct info you will need to either have convo_session_uid expire on time limit or revalidate
+      if (localStorage.getItem('convo_session_uid') !== null) {
+        new_uuid = localStorage.getItem('convo_session_uid')
       }
        this.socket = Cable.createConsumer('ws://localhost:3000/cable').subscriptions.create({
-          channel: 'ConversationsChannel', convo_unq_id: new_uuid
+          channel: 'ConversationsChannel', convo_session_uid: new_uuid
         }, {
           connected: function() {
-            let cui = JSON.parse(this.identifier).convo_unq_id
+            let cui = JSON.parse(this.identifier).convo_session_uid
             store.dispatch(setConvoUnqId(cui))
 
-            localStorage.setItem('convo_unq_id', cui)
+            localStorage.setItem('convo_session_uid', cui)
 
             let created_events = store.getState().viCreatedEvents
 
@@ -321,7 +321,7 @@ const ConnectedWidget = forwardRef((props, ref) => {
   }
 
   // .subscriptions.create({
-  //   channel: 'ConversationsChannel', convo_unq_id: new_uuid
+  //   channel: 'ConversationsChannel', convo_session_uid: new_uuid
   // }, {
   //   connected: function() {
   //     store.dispatch(setConvoUnqId(new_uuid))
@@ -364,7 +364,7 @@ const ConnectedWidget = forwardRef((props, ref) => {
   //   try {
   //     debugger
   //     const serializedState = JSON.stringify(state)
-  //     localStorage.setItem('convo_unq_id', serializedState)
+  //     localStorage.setItem('convo_session_uid', serializedState)
   //   } catch(e) {
   //     console.log(e)
   //   }
@@ -372,7 +372,7 @@ const ConnectedWidget = forwardRef((props, ref) => {
   //
   // function loadFromLocalStorage() {
   //   try {
-  //     const serializedState = localStorage.getItem('convo_unq_id')
+  //     const serializedState = localStorage.getItem('convo_session_uid')
   //     if (serializedState === null) return undefined
   //     return JSON.parse(serializedState)
   //   } catch(e) {
@@ -398,7 +398,7 @@ const ConnectedWidget = forwardRef((props, ref) => {
     );
     store.socketRef = sock.marker;
 
-    // store.subscribe(() => saveToLocalStorage({convo_unq_id: store.getState().metadata.convo_unq_id}))
+    // store.subscribe(() => saveToLocalStorage({convo_session_uid: store.getState().metadata.convo_session_uid}))
   }
   return (
     <Provider store={store}>
@@ -439,7 +439,7 @@ const ConnectedWidget = forwardRef((props, ref) => {
 });
 
 ConnectedWidget.propTypes = {
-  convo_unq_id: PropTypes.string,
+  convo_session_uid: PropTypes.string,
   initPayload: PropTypes.string,
   title: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
   subtitle: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),

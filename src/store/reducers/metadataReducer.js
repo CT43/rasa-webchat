@@ -10,7 +10,7 @@ export default function (storage) {
     domHighlight: Map(),
     hintText: '',
     showTooltip: false,
-    convo_unq_id: ''
+    convo_session_uid: ''
   });
 
   const initialState = Map({
@@ -21,8 +21,8 @@ export default function (storage) {
     const storeMetadata = storeMetadataTo(storage);
     switch (action.type) {
       // Each change to the redux store's behavior Map gets recorded to storage
-      case actionTypes.SET_CONVO_UNQ_ID: {
-        return storeMetadata(state.set('convo_unq_id', action.text));
+      case actionTypes.SET_convo_session_uid: {
+        return storeMetadata(state.set('convo_session_uid', action.text));
       }
       case actionTypes.CLEAR_METADATA: {
         return storeMetadata(state.merge(defaultValues)); // reset metadata to its default values

@@ -16,14 +16,14 @@ export function getEvents() {
 
 export function setConvoUnqId(text) {
   return {
-    type: actions.SET_CONVO_UNQ_ID,
+    type: actions.SET_convo_session_uid,
     text
   };
 }
 
 export function getConvoUnqId() {
   return {
-    type: actions.GET_CONVO_UNQ_ID
+    type: actions.GET_convo_session_uid
   };
 }
 

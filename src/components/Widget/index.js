@@ -358,7 +358,7 @@ class Widget extends Component {
     //
     //
     // const socket = Cable.createConsumer('ws://localhost:3000/cable').subscriptions.create({
-    //   channel: 'ConversationsChannel', convo_unq_id: new_uuid
+    //   channel: 'ConversationsChannel', convo_session_uid: new_uuid
     // }, {
     //   connected: function() {
     //     dispatch(setConvoUnqId(new_uuid))

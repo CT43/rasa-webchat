@@ -37,9 +37,9 @@ function initStore(
       sessionId = socket.sessionId;
     }
     switch (action.type) {
-      // case actionTypes.GET_CONVO_UNQ_ID: {
+      // case actionTypes.GET_convo_session_uid: {
       //
-      //   JSON.parse(socket.identifier).convo_unq_id
+      //   JSON.parse(socket.identifier).convo_session_uid
       //
       // }
       case actionTypes.EMIT_NEW_USER_MESSAGE: {
