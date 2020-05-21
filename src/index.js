@@ -53,100 +53,100 @@ export let store = null;
 const ConnectedWidget = forwardRef((props, ref) => {
 
 
-  class Socket {
-    constructor(
-      url,
-      customData,
-      path,
-      protocol,
-      protocolOptions,
-      onSocketEvent,
-      convo_unq_id
-    ) {
-      this.url = 'ws://localhost:3000/cable';
-      this.customData = customData;
-      this.path = '/cable';
-      this.protocol = protocol;
-      this.protocolOptions = protocolOptions;
-      this.onSocketEvent = onSocketEvent;
-      this.socket = null;
-      this.onEvents = [];
-      this.marker = Math.random();
-      this.convo_unq_id = uuid();
-      this.chatLogs = [];
-    }
+  // class Socket {
+  //   constructor(
+  //     url,
+  //     customData,
+  //     path,
+  //     protocol,
+  //     protocolOptions,
+  //     onSocketEvent,
+  //     convo_unq_id
+  //   ) {
+  //     this.url = 'ws://localhost:3000/cable';
+  //     this.customData = customData;
+  //     this.path = '/cable';
+  //     this.protocol = protocol;
+  //     this.protocolOptions = protocolOptions;
+  //     this.onSocketEvent = onSocketEvent;
+  //     this.socket = null;
+  //     this.onEvents = [];
+  //     this.marker = Math.random();
+  //     this.convo_unq_id = uuid();
+  //     this.chatLogs = [];
+  //   }
+  //
+  //   isInitialized() {
+  //     return this.socket !== null && this.socket.connected;
+  //   }
+  //
+  //   on(event, callback) {
+  //     if (!this.socket) {
+  //       this.onEvents.push({ event, callback });
+  //     } else {
+  //       this.socket.on(event, callback);
+  //     }
+  //   }
+  //
+  //   emit(message, data) {
+  //     if (this.socket) {
+  //       this.socket.emit(message, data);
+  //     }
+  //   }
+  //
+  //   close() {
+  //     if (this.socket) {
+  //       this.socket.close();
+  //     }
+  //   }
+  //
+  //   // createSocket() {
+  //   //   let cable = Cable.createConsumer('ws://localhost:3000/cable');
+  //   //   this.chats = cable.subscriptions.create({
+  //   //     channel: 'ConversationsChannel', convo_unq_id: this.convo_unq_id
+  //   //   }, {
+  //   //     connected: () => {},
+  //   //     received: (data) => {
+  //   //
+  //   //       let chatLogs = this.chatLogs;
+  //   //       chatLogs.push(JSON.parse(data));
+  //   //       this.chatLogs = chatLogs
+  //   //     },
+  //   //     create: function(chatContent) {
+  //   //       this.perform('create', {
+  //   //         content: chatContent
+  //   //       });
+  //   //     }
+  //   //   });
+  //   // }
+  //   createSocket() {
+  //     this.socket = socket(
+  //       this.url,
+  //       this.customData,
+  //       this.path,
+  //       this.protocol,
+  //       this.protocolOptions
+  //     );
+  //     // We set a function on session_confirm here so as to avoid any race condition
+  //     // this will be called first and will set those parameters for everyone to use.
+  //     this.socket.on('session_confirm', (sessionObject) => {
+  //       this.sessionConfirmed = true;
+  //       this.sessionId = (sessionObject && sessionObject.session_id)
+  //         ? sessionObject.session_id
+  //         : sessionObject;
+  //     });
+  //     this.onEvents.forEach((event) => {
+  //       this.socket.on(event.event, event.callback);
+  //     });
+  //
+  //     this.onEvents = [];
+  //     Object.keys(this.onSocketEvent).forEach((event) => {
+  //       this.socket.on(event, this.onSocketEvent[event]);
+  //     });
+  //   }
+  // }
 
-    isInitialized() {
-      return this.socket !== null && this.socket.connected;
-    }
-
-    on(event, callback) {
-      if (!this.socket) {
-        this.onEvents.push({ event, callback });
-      } else {
-        this.socket.on(event, callback);
-      }
-    }
-
-    emit(message, data) {
-      if (this.socket) {
-        this.socket.emit(message, data);
-      }
-    }
-
-    close() {
-      if (this.socket) {
-        this.socket.close();
-      }
-    }
-
-    // createSocket() {
-    //   let cable = Cable.createConsumer('ws://localhost:3000/cable');
-    //   this.chats = cable.subscriptions.create({
-    //     channel: 'ConversationsChannel', convo_unq_id: this.convo_unq_id
-    //   }, {
-    //     connected: () => {},
-    //     received: (data) => {
-    //
-    //       let chatLogs = this.chatLogs;
-    //       chatLogs.push(JSON.parse(data));
-    //       this.chatLogs = chatLogs
-    //     },
-    //     create: function(chatContent) {
-    //       this.perform('create', {
-    //         content: chatContent
-    //       });
-    //     }
-    //   });
-    // }
-    createSocket() {
-      this.socket = socket(
-        this.url,
-        this.customData,
-        this.path,
-        this.protocol,
-        this.protocolOptions
-      );
-      // We set a function on session_confirm here so as to avoid any race condition
-      // this will be called first and will set those parameters for everyone to use.
-      this.socket.on('session_confirm', (sessionObject) => {
-        this.sessionConfirmed = true;
-        this.sessionId = (sessionObject && sessionObject.session_id)
-          ? sessionObject.session_id
-          : sessionObject;
-      });
-      this.onEvents.forEach((event) => {
-        this.socket.on(event.event, event.callback);
-      });
-
-      this.onEvents = [];
-      Object.keys(this.onSocketEvent).forEach((event) => {
-        this.socket.on(event, this.onSocketEvent[event]);
-      });
-    }
-  }
-
-  const new_uuid = uuid()
+  let new_uuid = uuid()
 
 
   class Sock {
@@ -207,6 +207,12 @@ const ConnectedWidget = forwardRef((props, ref) => {
       }
     }
 
+    sessionRequest(localId) {
+      if (this.socket) {
+        this.socket.session_request(localId)
+      }
+    }
+
     // createSocket() {
     //   let cable = Cable.createConsumer('ws://localhost:3000/cable');
     //   this.chats = cable.subscriptions.create({
@@ -232,45 +238,55 @@ const ConnectedWidget = forwardRef((props, ref) => {
     // solution to this is storing the event that seems to start it all - bot utterence - in redux store, then pulling it out and executing it
     // will likely have to do this with other shit
     createSocket() {
-
+      // Get rid of below if you don't want to persist the convo_unq_id on a page reload during dev
+      // Later when dealing with PII and acct info you will need to either have convo_unq_id expire on time limit or revalidate
+      if (localStorage.getItem('convo_unq_id') !== null) {
+        new_uuid = localStorage.getItem('convo_unq_id')
+      }
        this.socket = Cable.createConsumer('ws://localhost:3000/cable').subscriptions.create({
           channel: 'ConversationsChannel', convo_unq_id: new_uuid
         }, {
           connected: function() {
-            store.dispatch(setConvoUnqId(new_uuid))
+            let cui = JSON.parse(this.identifier).convo_unq_id
+            store.dispatch(setConvoUnqId(cui))
+
+            localStorage.setItem('convo_unq_id', cui)
+
+            let created_events = store.getState().viCreatedEvents
+
+            if (created_events["connected"]) {
+              created_events["connected"]()
+            }
+
             true
 
           },
+          session_request: function(session_id) {
+              this.perform('session_request', {
+                session_id: session_id
+              })
+          },
           received: function(data) {
-            let prefix = "bot_uttered" // for now
-            let created_events = store.getState().violet
-            if (created_events[`${prefix}`]) {
+            let parsed_data = JSON.parse(data)
+            let msg_format_attrs = parsed_data.message.msg_format_attr
+            let who_uttered = msg_format_attrs.who_uttered
+            debugger
 
-              created_events[`${prefix}`](JSON.parse(data).message)
+            let created_events = store.getState().viCreatedEvents
+
+            if (who_uttered && who_uttered === "bot_uttered" && created_events[`${who_uttered}`]) {
+
+              created_events[`${who_uttered}`](JSON.parse(data).message) // This is sending the event to "bot_uttered which was set in the index widget file"
             }
 
 
+            // msg_format_attrs.forEach(function(format_attr) => { // Maybe worth it depending
+            //
+            // })
 
-            let eve = store.getState('created_events').metadata
-            let handlebu = eve._root.entries[7][1]
 
-            if (handlebu['bot_uttered']) {
-              handlebu['bot_uttered'](JSON.parse(data).message)
-            } else {
-              handlebu(JSON.parse(data).message)
-            }
-            // store.dispatch(addResponseMessage(JSON.parse(data).message.text))
-            // let chatLogs = this.chatLogs;
-            // chatLogs.push(JSON.parse(data));
-            // this.chatLogs = chatLogs
           },
           // Make a this.perform('session request thing')
-          create: function(chatContent) {
-            this.perform('create', {
-              content: chatContent
-            });
-          },
-          createSocket: () => {},
           createEvent: (eventName, callback) => {
             store.dispatch(createEvents(eventName, callback))
           },
@@ -278,7 +294,7 @@ const ConnectedWidget = forwardRef((props, ref) => {
             return true
           },
           // close: () => {},
-          emit: function(message) {
+          emit: function(message, data) {
             this.perform('create', {
               content: message
             });
@@ -286,7 +302,8 @@ const ConnectedWidget = forwardRef((props, ref) => {
         });
       // We set a function on session_confirm here so as to avoid any race condition
       // this will be called first and will set those parameters for everyone to use.
-      this.socket.on('session_confirm', (sessionObject) => {
+
+      this.socket.on('session_confirm', (sessionObject) => { // These don't do anything for ActionCable config
         this.sessionConfirmed = true;
         this.sessionId = (sessionObject && sessionObject.session_id)
           ? sessionObject.session_id
@@ -343,6 +360,29 @@ const ConnectedWidget = forwardRef((props, ref) => {
     // props.onSocketEvent
   );
 
+  // function saveToLocalStorage(state) {
+  //   try {
+  //     debugger
+  //     const serializedState = JSON.stringify(state)
+  //     localStorage.setItem('convo_unq_id', serializedState)
+  //   } catch(e) {
+  //     console.log(e)
+  //   }
+  // }
+  //
+  // function loadFromLocalStorage() {
+  //   try {
+  //     const serializedState = localStorage.getItem('convo_unq_id')
+  //     if (serializedState === null) return undefined
+  //     return JSON.parse(serializedState)
+  //   } catch(e) {
+  //     console.log(e)
+  //     return undefined
+  //   }
+  // }
+
+  // const persistedState = loadFromLocalStorage()
+
 
   const storage =
     props.params.storage === 'session' ? sessionStorage : localStorage;
@@ -357,6 +397,8 @@ const ConnectedWidget = forwardRef((props, ref) => {
       props.onWidgetEvent
     );
     store.socketRef = sock.marker;
+
+    // store.subscribe(() => saveToLocalStorage({convo_unq_id: store.getState().metadata.convo_unq_id}))
   }
   return (
     <Provider store={store}>

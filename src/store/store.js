@@ -5,7 +5,7 @@ import { SESSION_NAME } from 'constants';
 import behavior from './reducers/behaviorReducer';
 import messages from './reducers/messagesReducer';
 import metadata from './reducers/metadataReducer';
-import violet from './reducers/violetReducer';
+import viCreatedEvents from './reducers/viCreatedEventsReducer';
 
 import { getLocalSession } from './reducers/helper';
 import * as actionTypes from './actions/actionTypes';
@@ -27,9 +27,7 @@ function initStore(
   socket,
   storage,
   docViewer = false,
-  onWidgetEvent,
-  convo_unq_id,
-  created_events = []
+  onWidgetEvent
 ) {
   const customMiddleWare = store => next => (action) => {
     let sessionId = getLocalSession(storage, SESSION_NAME)
@@ -137,8 +135,9 @@ function initStore(
     behavior: behavior(hintText, connectingText, storage, docViewer, onWidgetEvent),
     messages: messages(storage),
     metadata: metadata(storage),
-    violet: violet(storage)
+    viCreatedEvents: viCreatedEvents(storage)
   });
+
 
 
   // eslint-disable-next-line no-underscore-dangle
@@ -149,6 +148,7 @@ function initStore(
     composeEnhancer(applyMiddleware(customMiddleWare)),
   );
 }
+
 
 
 export { initStore };
