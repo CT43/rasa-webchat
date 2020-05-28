@@ -36,7 +36,7 @@ import {
 } from 'actions';
 
 import { SESSION_NAME, NEXT_MESSAGE } from 'constants';
-import { isVideo, isImage, isQR, isText, isCarousel } from './msgProcessor';
+import { isVideo, isImage, isQR, isText, isCarousel, isGiphy } from './msgProcessor';
 import WidgetLayout from './layout';
 import { storeLocalSession, getLocalSession } from '../../store/reducers/helper';
 export let store = null;
@@ -144,7 +144,6 @@ class Widget extends Component {
   }
 
   handleMessageReceived(messageWithMetadata) {
-    debugger
     const { dispatch, isChatOpen, disableTooltips } = this.props;
     // we extract metadata so we are sure it does not interfer with type checking of the message
     const { metadata, ...message } = messageWithMetadata;
@@ -227,7 +226,6 @@ class Widget extends Component {
   }
 
   handleBotUtterance(botUtterance) { // start of receiving a message - what is called from the ActionCable.received
-    debugger
     const { dispatch } = this.props;
     this.clearCustomStyle();
     this.eventListenerCleaner();
@@ -570,7 +568,7 @@ class Widget extends Component {
       debugger
       this.props.dispatch(addResponseMessage(messageClean.text));
     } else if (isQR(messageClean)) {
-
+      debugger
       this.props.dispatch(addQuickReply(messageClean));
     } else if (isCarousel(messageClean)) {
       this.props.dispatch(
@@ -585,6 +583,15 @@ class Widget extends Component {
         })
       );
     } else if (isImage(messageClean)) {
+      const element = messageClean.attachment.image.data;
+      debugger
+      this.props.dispatch(
+        addImageSnippet({
+          title: element.title,
+          image: element.images.original.url
+        })
+      );
+    } else if (isGiphy(messageClean)) {
       const element = messageClean.attachment.image.data;
       debugger
       this.props.dispatch(

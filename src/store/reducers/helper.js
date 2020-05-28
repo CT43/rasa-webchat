@@ -50,12 +50,13 @@ export function createImageSnippet(image, sender) {
 }
 
 export function createQuickReply(quickReply, sender) {
+  debugger
   return Map({
     type: MESSAGES_TYPES.QUICK_REPLY,
     component: QuickReply,
     text: quickReply.text,
     hint: quickReply.hint || 'Select an option...',
-    quick_replies: fromJS(quickReply.quick_replies),
+    quick_replies: fromJS(quickReply.msg_format_attr.quick_replies),
     sender,
     showAvatar: true,
     chosenReply: null,

@@ -23,10 +23,16 @@ export function isImage(message) {
   && message.msg_format_attr.type === 'image';
 }
 
+export function isGiphy(message) {
+  debugger
+  return Object.keys(message).includes('attachment')
+  && Object.keys(message.msg_format_attr).includes('type')
+  && message.msg_format_attr.type === 'giphy';
+}
+
 export function isText(message) {
   debugger
-  return Object.keys(message).length === 7
-  && Object.keys(message).includes('text')
+  return Object.keys(message).includes('text')
   && Object.keys(message).includes('attachment')
   && Object.keys(message).includes('msg_format_attr')
   && Object.keys(message.msg_format_attr).includes('type')
@@ -34,7 +40,9 @@ export function isText(message) {
 }
 
 export function isQR(message) {
-  return Object.keys(message).length === 2
-    && Object.keys(message).includes('text')
-    && Object.keys(message).includes('quick_replies');
+  debugger
+  return Object.keys(message).includes('text')
+    && Object.keys(message).includes('msg_format_attr')
+    && Object.keys(message.msg_format_attr).includes('type')
+    && message.msg_format_attr.type === 'quick_reply';
 }
