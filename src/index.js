@@ -240,9 +240,12 @@ const ConnectedWidget = forwardRef((props, ref) => {
     createSocket() {
       // Get rid of below if you don't want to persist the convo_session_uid on a page reload during dev
       // Later when dealing with PII and acct info you will need to either have convo_session_uid expire on time limit or revalidate
-      if (localStorage.getItem('convo_session_uid') !== null) {
-        new_uuid = localStorage.getItem('convo_session_uid')
-      }
+
+
+      //////////////////////////////
+      // if (localStorage.getItem('convo_session_uid') !== null) {
+      //   new_uuid = localStorage.getItem('convo_session_uid')
+      // }
        this.socket = Cable.createConsumer('ws://localhost:3000/cable').subscriptions.create({
           channel: 'ConversationsChannel', convo_session_uid: new_uuid
         }, {
@@ -267,6 +270,7 @@ const ConnectedWidget = forwardRef((props, ref) => {
             let parsed_data = JSON.parse(data)
             let msg_format_attrs = parsed_data.message.msg_format_attr
             let who_uttered = msg_format_attrs.who_uttered
+            debugger
 
             let created_events = store.getState().viCreatedEvents
 

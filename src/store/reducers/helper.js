@@ -37,10 +37,11 @@ export function createVideoSnippet(video, sender) {
 }
 
 export function createImageSnippet(image, sender) {
+  debugger
   return Map({
     type: MESSAGES_TYPES.IMGREPLY.IMAGE,
     component: Image,
-    title: image.title,
+    // title: image.title,
     image: image.image,
     sender,
     showAvatar: true,

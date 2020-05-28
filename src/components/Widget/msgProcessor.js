@@ -10,20 +10,27 @@ export function isCarousel(message) {
 }
 
 export function isVideo(message) {
+  debugger
   return Object.keys(message).includes('attachment')
   && Object.keys(message.attachment).includes('type')
   && message.attachment.type === 'video';
 }
 
 export function isImage(message) {
+  debugger
   return Object.keys(message).includes('attachment')
-  && Object.keys(message.attachment).includes('type')
-  && message.attachment.type === 'image';
+  && Object.keys(message.msg_format_attr).includes('type')
+  && message.msg_format_attr.type === 'image';
 }
 
 export function isText(message) {
-
-  return Object.keys(message).length === 6 && Object.keys(message).includes('text');
+  debugger
+  return Object.keys(message).length === 7
+  && Object.keys(message).includes('text')
+  && Object.keys(message).includes('attachment')
+  && Object.keys(message).includes('msg_format_attr')
+  && Object.keys(message.msg_format_attr).includes('type')
+  && message.msg_format_attr.type === 'text';
 }
 
 export function isQR(message) {

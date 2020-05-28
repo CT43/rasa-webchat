@@ -144,7 +144,7 @@ class Widget extends Component {
   }
 
   handleMessageReceived(messageWithMetadata) {
-
+    debugger
     const { dispatch, isChatOpen, disableTooltips } = this.props;
     // we extract metadata so we are sure it does not interfer with type checking of the message
     const { metadata, ...message } = messageWithMetadata;
@@ -227,7 +227,7 @@ class Widget extends Component {
   }
 
   handleBotUtterance(botUtterance) { // start of receiving a message - what is called from the ActionCable.received
-
+    debugger
     const { dispatch } = this.props;
     this.clearCustomStyle();
     this.eventListenerCleaner();
@@ -567,7 +567,7 @@ class Widget extends Component {
     const { customCss, ...messageClean } = message;
 
     if (isText(messageClean)) { // imported methods from msgprocessor - search - this is what will have to change to allow for cables format rather than socket
-
+      debugger
       this.props.dispatch(addResponseMessage(messageClean.text));
     } else if (isQR(messageClean)) {
 
@@ -585,11 +585,12 @@ class Widget extends Component {
         })
       );
     } else if (isImage(messageClean)) {
-      const element = messageClean.attachment.payload;
+      const element = messageClean.attachment.image.data;
+      debugger
       this.props.dispatch(
         addImageSnippet({
           title: element.title,
-          image: element.src
+          image: element.images.downsized.url
         })
       );
     } else {
