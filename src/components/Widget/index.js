@@ -590,7 +590,7 @@ class Widget extends Component {
       this.props.dispatch(
         addImageSnippet({
           title: element.title,
-          image: element.images.downsized.url
+          image: element.images.original.url
         })
       );
     } else {

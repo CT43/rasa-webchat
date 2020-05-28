@@ -5,6 +5,7 @@ import './styles.scss';
 
 class ImgReply extends PureComponent {
   render() {
+    debugger
     const { params: { images: { dims = {} } = {} } } = this.props;
     const { width, height } = dims;
     // Convert map to object
