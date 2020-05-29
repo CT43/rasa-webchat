@@ -22,8 +22,8 @@ class QuickReply extends PureComponent {
     const hint = message.get('hint');
     const chosenReply = getChosenReply(id);
     if (!chosenReply && !inputState) {
-      // this.props.toggleInputDisabled();
-      // this.props.changeInputFieldHint(hint);
+      this.props.toggleInputDisabled();
+      this.props.changeInputFieldHint(hint);
     }
   }
 
@@ -36,7 +36,7 @@ class QuickReply extends PureComponent {
     const payload = reply.get('payload');
     const title = reply.get('title');
     chooseReply(payload, title, id);
-    // this.props.changeInputFieldHint('Type a message...');
+    this.props.changeInputFieldHint('Type a message...');
   }
 
   render() {
@@ -102,7 +102,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch(setQuickReply(id, title));
     dispatch(addUserMessage(title));
     dispatch(emitUserMessage(payload));
-    // dispatch(toggleInputDisabled());
+    dispatch(toggleInputDisabled());
   }
 });
 
