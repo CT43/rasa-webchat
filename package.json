@@ -8,6 +8,7 @@
   "author": "Mr. Bot <human@mrbot.ai>",
   "license": "MIT",
   "scripts": {
+    "start": "webpack --config ./webpack.prod.js -p",
     "dev": "webpack-dev-server --config webpack.dev.js",
     "build": "webpack --config ./webpack.prod.js -p",
     "test": "jest",
