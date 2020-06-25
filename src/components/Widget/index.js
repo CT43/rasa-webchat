@@ -670,6 +670,7 @@ const mapStateToProps = state => ({
 
 Widget.propTypes = {
   title: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+  agencyWidgetId: PropTypes.string,
   customData: PropTypes.shape({}),
   subtitle: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
   initPayload: PropTypes.string,

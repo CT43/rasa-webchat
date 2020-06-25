@@ -147,7 +147,8 @@ const ConnectedWidget = forwardRef((props, ref) => {
   // }
 
   let new_uuid = uuid()
-
+  debugger
+  let agencyWidgetId = props.agencyWidgetId
 
   class Sock {
     constructor(
@@ -157,7 +158,7 @@ const ConnectedWidget = forwardRef((props, ref) => {
       protocol,
       protocolOptions,
       onSocketEvent,
-      convo_session_uid
+      convo_session_uid,
     ) {
       this.url = 'ws://localhost:3000/cable';
       this.customData = customData;
@@ -247,7 +248,7 @@ const ConnectedWidget = forwardRef((props, ref) => {
       //   new_uuid = localStorage.getItem('convo_session_uid')
       // }
        this.socket = Cable.createConsumer('ws://localhost:3000/cable').subscriptions.create({
-          channel: 'ConversationsChannel', convo_session_uid: new_uuid
+          channel: 'ConversationsChannel', convo_session_uid: new_uuid, agencyWidgetId: agencyWidgetId
         }, {
           connected: function() {
             let cui = JSON.parse(this.identifier).convo_session_uid
@@ -403,6 +404,7 @@ const ConnectedWidget = forwardRef((props, ref) => {
         ref={ref}
         initPayload={props.initPayload}
         title={props.title}
+        agencyWidgetId={props.agencyWidgetId}
         subtitle={props.subtitle}
         customData={props.customData}
         handleNewUserMessage={props.handleNewUserMessage}
@@ -439,8 +441,9 @@ ConnectedWidget.propTypes = {
   convo_session_uid: PropTypes.string,
   initPayload: PropTypes.string,
   title: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+  agencyWidgetId: PropTypes.string,
   subtitle: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
-  protocol: PropTypes.string,
+  protocol: PropTypes.string.isRequired,
   socketUrl: PropTypes.string.isRequired,
   socketPath: PropTypes.string,
   protocolOptions: PropTypes.shape({}),
@@ -482,6 +485,7 @@ ConnectedWidget.propTypes = {
 
 ConnectedWidget.defaultProps = {
   title: 'Welcome',
+  agencyWidgetId: '',
   customData: {},
   inputTextFieldHint: 'Type a message...',
   connectingText: 'Waiting for server...',

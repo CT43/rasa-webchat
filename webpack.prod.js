@@ -7,7 +7,7 @@ module.exports = [{
   // entry: ['babel-polyfill', './index.js'],
   entry: './index.js',
   output: {
-    path: path.join(__dirname, '/lib'),
+    path: path.join(__dirname, '/dist'),
     filename: 'index.js',
     library: 'WebChat',
     libraryTarget: 'umd'
@@ -44,7 +44,7 @@ module.exports = [{
       }
     ]
   },
-  plugins: [new CleanWebpackPlugin(['lib'])]
+  plugins: [new CleanWebpackPlugin(['dist'])]
 }, {
   entry: './index.js',
   externals: {

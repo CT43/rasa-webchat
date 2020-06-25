@@ -5,9 +5,11 @@ import { Widget, toggleChat, openChat, closeChat, showChat, hideChat, isOpen, is
 
 const plugin = {
   init: (args) => {
+    debugger
     ReactDOM.render(
       <Widget
         protocol={args.protocol}
+        agencyWidgetId={args.agencyWidgetId}
         socketUrl={args.socketUrl}
         socketPath={args.socketPath}
         protocolOptions={args.protocolOptions}
