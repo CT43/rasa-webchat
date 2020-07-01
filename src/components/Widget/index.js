@@ -558,17 +558,17 @@ class Widget extends Component {
   }
 
   dispatchMessage(message) {
-    debugger
+    //debugger
     if (Object.keys(message).length === 0) {
       return;
     }
     const { customCss, ...messageClean } = message;
 
     if (isText(messageClean)) { // imported methods from msgprocessor - search - this is what will have to change to allow for cables format rather than socket
-      debugger
+      //debugger
       this.props.dispatch(addResponseMessage(messageClean.text));
     } else if (isQR(messageClean)) {
-      debugger
+      //debugger
       this.props.dispatch(addQuickReply(messageClean));
     } else if (isCarousel(messageClean)) {
       this.props.dispatch(
@@ -584,7 +584,7 @@ class Widget extends Component {
       );
     } else if (isImage(messageClean)) {
       const element = messageClean.attachment.image.data;
-      debugger
+      //debugger
       this.props.dispatch(
         addImageSnippet({
           title: element.title,
@@ -593,7 +593,7 @@ class Widget extends Component {
       );
     } else if (isGiphy(messageClean)) {
       const element = messageClean.attachment.image.data;
-      debugger
+      //debugger
       this.props.dispatch(
         addImageSnippet({
           title: element.title,
@@ -634,6 +634,7 @@ class Widget extends Component {
         onSendMessage={event => this.handleMessageSubmit(event)}
         title={this.props.title}
         subtitle={this.props.subtitle}
+        colorTheme={this.props.colorTheme}
         customData={this.props.customData}
         profileAvatar={this.props.profileAvatar}
         showCloseButton={this.props.showCloseButton}
@@ -673,6 +674,7 @@ Widget.propTypes = {
   agencyWidgetId: PropTypes.string,
   customData: PropTypes.shape({}),
   subtitle: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+  colorTheme: PropTypes.string,
   initPayload: PropTypes.string,
   profileAvatar: PropTypes.string,
   showCloseButton: PropTypes.bool,
@@ -709,6 +711,7 @@ Widget.propTypes = {
 Widget.defaultProps = {
   isChatOpen: false,
   isChatVisible: true,
+  colorTheme: "#000",
   fullScreenMode: false,
   connectOn: 'mount',
   initialized: false,

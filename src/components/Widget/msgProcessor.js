@@ -10,28 +10,28 @@ export function isCarousel(message) {
 }
 
 export function isVideo(message) {
-  debugger
+  //debugger
   return Object.keys(message).includes('attachment')
   && Object.keys(message.attachment).includes('type')
   && message.attachment.type === 'video';
 }
 
 export function isImage(message) {
-  debugger
+  //debugger
   return Object.keys(message).includes('attachment')
   && Object.keys(message.msg_format_attr).includes('type')
   && message.msg_format_attr.type === 'image';
 }
 
 export function isGiphy(message) {
-  debugger
+  //debugger
   return Object.keys(message).includes('attachment')
   && Object.keys(message.msg_format_attr).includes('type')
   && message.msg_format_attr.type === 'giphy';
 }
 
 export function isText(message) {
-  debugger
+  //debugger
   return Object.keys(message).includes('text')
   && Object.keys(message).includes('attachment')
   && Object.keys(message).includes('msg_format_attr')
@@ -40,7 +40,7 @@ export function isText(message) {
 }
 
 export function isQR(message) {
-  debugger
+  //debugger
   return Object.keys(message).includes('text')
     && Object.keys(message).includes('msg_format_attr')
     && Object.keys(message.msg_format_attr).includes('type')

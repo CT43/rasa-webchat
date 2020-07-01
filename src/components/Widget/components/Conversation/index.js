@@ -11,6 +11,7 @@ const Conversation = props =>
     <Header
       title={props.title}
       subtitle={props.subtitle}
+      colorTheme={props.colorTheme}
       toggleChat={props.toggleChat}
       toggleFullScreen={props.toggleFullScreen}
       fullScreenMode={props.fullScreenMode}
@@ -36,6 +37,7 @@ const Conversation = props =>
 Conversation.propTypes = {
   title: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
   subtitle: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+  colorTheme: PropTypes.string,
   sendMessage: PropTypes.func,
   profileAvatar: PropTypes.string,
   toggleFullScreen: PropTypes.func,

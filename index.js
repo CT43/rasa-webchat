@@ -5,11 +5,12 @@ import { Widget, toggleChat, openChat, closeChat, showChat, hideChat, isOpen, is
 
 const plugin = {
   init: (args) => {
-    debugger
+    //debugger
     ReactDOM.render(
       <Widget
         protocol={args.protocol}
         agencyWidgetId={args.agencyWidgetId}
+        colorTheme={args.colorTheme}
         socketUrl={args.socketUrl}
         socketPath={args.socketPath}
         protocolOptions={args.protocolOptions}
@@ -43,7 +44,7 @@ const plugin = {
         defaultHighlightCss={args.defaultHighlightCss}
         defaultHighlightAnimation={args.defaultHighlightAnimation}
         defaultHighlightClassname={args.defaultHighlightClassname}
-      />, document.querySelector(args.selector)
+      />, document.querySelector("#webchat")
     );
   }
 };

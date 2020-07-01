@@ -9,6 +9,7 @@ import './style.scss';
 const Header = ({
   title,
   subtitle,
+  colorTheme,
   fullScreenMode,
   toggleFullScreen,
   toggleChat,
@@ -18,46 +19,53 @@ const Header = ({
   connectingText,
   closeImage,
   profileAvatar
-}) =>
-  <div className="rw-header-and-loading">
-    <div className={`rw-header ${subtitle ? 'rw-with-subtitle' : ''}`}>
-      {
-        profileAvatar && (
-          <img src={profileAvatar} className="rw-avatar" alt="chat avatar" />
-        )
-      }
-      <div className="rw-header-buttons">
+}) => {
+  const headerColor = (colorTheme) = {
+    backgroundColor: `${colorTheme}`
+  };
+
+  return (
+    <div className="rw-header-and-loading">
+      <div className={`rw-header ${subtitle ? 'rw-with-subtitle' : ''}`} style={headerColor}>
         {
-          showFullScreenButton &&
-          <button className="rw-toggle-fullscreen-button" onClick={toggleFullScreen}>
-            <img
-              className={`rw-toggle-fullscreen ${fullScreenMode ? 'rw-fullScreenExitImage' : 'rw-fullScreenImage'}`}
-              src={fullScreenMode ? fullscreenExit : fullscreen}
-              alt="toggle fullscreen"
-            />
-          </button>
+          profileAvatar && (
+            <img src={profileAvatar} className="rw-avatar" alt="chat avatar" />
+          )
         }
-        {
-          showCloseButton &&
-          <button className="rw-close-button" onClick={toggleChat}>
-            <img
-              className={`rw-close ${closeImage ? '' : 'rw-default'}`}
-              src={closeImage || close}
-              alt="close"
-            />
-          </button>
-        }
+        <div className="rw-header-buttons">
+          {
+            showFullScreenButton &&
+            <button className="rw-toggle-fullscreen-button" onClick={toggleFullScreen} style={headerColor}>
+              <img
+                className={`rw-toggle-fullscreen ${fullScreenMode ? 'rw-fullScreenExitImage' : 'rw-fullScreenImage'}`}
+                src={fullScreenMode ? fullscreenExit : fullscreen}
+                alt="toggle fullscreen"
+              />
+            </button>
+          }
+          {
+            showCloseButton &&
+            <button className="rw-close-button" onClick={toggleChat} style={headerColor}>
+              <img
+                className={`rw-close ${closeImage ? '' : 'rw-default'}`}
+                src={closeImage || close}
+                alt="close"
+              />
+            </button>
+          }
+        </div>
+        <h4 className={`rw-title ${profileAvatar && 'rw-with-avatar'}`}>{title}</h4>
+        {subtitle && <span className={profileAvatar && 'rw-with-avatar'}>{subtitle}</span>}
       </div>
-      <h4 className={`rw-title ${profileAvatar && 'rw-with-avatar'}`}>{title}</h4>
-      {subtitle && <span className={profileAvatar && 'rw-with-avatar'}>{subtitle}</span>}
+      {
+        !connected &&
+        <span className="rw-loading">
+          {connectingText}
+        </span>
+      }
     </div>
-    {
-      !connected &&
-      <span className="rw-loading">
-        {connectingText}
-      </span>
-    }
-  </div>;
+  )
+}
 
 Header.propTypes = {
   title: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),

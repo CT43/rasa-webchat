@@ -26,6 +26,7 @@ const WidgetLayout = (props) => {
         <Conversation
           title={props.title}
           subtitle={props.subtitle}
+          colorTheme={props.colorTheme}
           sendMessage={props.onSendMessage}
           profileAvatar={props.profileAvatar}
           toggleChat={props.toggleChat}
@@ -45,6 +46,7 @@ const WidgetLayout = (props) => {
       )}
       {!props.embedded && (
         <Launcher
+          colorTheme={props.colorTheme}
           toggle={props.toggleChat}
           isChatOpen={props.isChatOpen}
           badge={props.badge}
@@ -70,6 +72,7 @@ const mapStateToProps = state => ({
 WidgetLayout.propTypes = {
   title: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
   subtitle: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+  colorTheme: PropTypes.string,
   onSendMessage: PropTypes.func,
   toggleChat: PropTypes.func,
   toggleFullScreen: PropTypes.func,

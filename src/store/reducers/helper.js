@@ -37,7 +37,7 @@ export function createVideoSnippet(video, sender) {
 }
 
 export function createImageSnippet(image, sender) {
-  debugger
+  //debugger
   return Map({
     type: MESSAGES_TYPES.IMGREPLY.IMAGE,
     component: Image,
@@ -50,7 +50,7 @@ export function createImageSnippet(image, sender) {
 }
 
 export function createQuickReply(quickReply, sender) {
-  debugger
+  //debugger
   return Map({
     type: MESSAGES_TYPES.QUICK_REPLY,
     component: QuickReply,

@@ -147,7 +147,7 @@ const ConnectedWidget = forwardRef((props, ref) => {
   // }
 
   let new_uuid = uuid()
-  debugger
+  //debugger
   let agencyWidgetId = props.agencyWidgetId
 
   class Sock {
@@ -248,7 +248,7 @@ const ConnectedWidget = forwardRef((props, ref) => {
       //   new_uuid = localStorage.getItem('convo_session_uid')
       // }
        this.socket = Cable.createConsumer('ws://localhost:3000/cable').subscriptions.create({
-          channel: 'ConversationsChannel', convo_session_uid: new_uuid, agencyWidgetId: agencyWidgetId
+          channel: 'ConversationsChannel', convo_session_uid: new_uuid, agency_widget_id: agencyWidgetId
         }, {
           connected: function() {
             let cui = JSON.parse(this.identifier).convo_session_uid
@@ -271,7 +271,7 @@ const ConnectedWidget = forwardRef((props, ref) => {
             let parsed_data = JSON.parse(data)
             let msg_format_attrs = parsed_data.message.msg_format_attr
             let who_uttered = msg_format_attrs.who_uttered
-            debugger
+            //debugger
 
             let created_events = store.getState().viCreatedEvents
 
@@ -360,7 +360,7 @@ const ConnectedWidget = forwardRef((props, ref) => {
 
   // function saveToLocalStorage(state) {
   //   try {
-  //     debugger
+  //     //debugger
   //     const serializedState = JSON.stringify(state)
   //     localStorage.setItem('convo_session_uid', serializedState)
   //   } catch(e) {
@@ -404,6 +404,7 @@ const ConnectedWidget = forwardRef((props, ref) => {
         ref={ref}
         initPayload={props.initPayload}
         title={props.title}
+        colorTheme={props.colorTheme}
         agencyWidgetId={props.agencyWidgetId}
         subtitle={props.subtitle}
         customData={props.customData}
@@ -442,6 +443,7 @@ ConnectedWidget.propTypes = {
   initPayload: PropTypes.string,
   title: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
   agencyWidgetId: PropTypes.string,
+  colorTheme: PropTypes.string,
   subtitle: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
   protocol: PropTypes.string.isRequired,
   socketUrl: PropTypes.string.isRequired,
@@ -484,12 +486,14 @@ ConnectedWidget.propTypes = {
 };
 
 ConnectedWidget.defaultProps = {
-  title: 'Welcome',
+  title: 'Violet',
   agencyWidgetId: '',
-  customData: {},
+  customData: {language: 'en'},
+  initPayload: "hello",
+  colorTheme: "#7252ff",
   inputTextFieldHint: 'Type a message...',
   connectingText: 'Waiting for server...',
-  fullScreenMode: false,
+  fullScreenMode: true,
   hideWhenNotConnected: true,
   autoClearCache: false,
   connectOn: 'mount',
@@ -500,13 +504,19 @@ ConnectedWidget.defaultProps = {
   badge: 0,
   embedded: false,
   params: {
-    storage: 'local'
+    images: {
+      dims: {
+        // width: 300,
+        // height: 200
+      }
+    },
+    storage: "session"
   },
   docViewer: false,
   showCloseButton: true,
-  showFullScreenButton: false,
+  showFullScreenButton: true,
   displayUnreadCount: false,
-  showMessageDate: false,
+  showMessageDate: true,
   customMessageDelay: (message) => {
     let delay = message.length * 30;
     if (delay > 3 * 1000) delay = 3 * 1000;

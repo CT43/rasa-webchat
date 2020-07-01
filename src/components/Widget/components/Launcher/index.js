@@ -25,7 +25,8 @@ const Launcher = ({
   displayUnreadCount,
   showTooltip,
   lastMessage,
-  closeTooltip
+  closeTooltip,
+  colorTheme
 }) => {
   const className = ['rw-launcher'];
   if (isChatOpen) className.push('rw-hide-sm');
@@ -79,8 +80,12 @@ const Launcher = ({
     </div>
   );
 
+  const launcherColor = (colorTheme) = {
+    backgroundColor: `${colorTheme}`
+  };
+
   return (
-    <button type="button" className={className.join(' ')} onClick={toggle}>
+    <button type="button" className={className.join(' ')} onClick={toggle} style={launcherColor}>
       <Badge badge={badge} />
       {isChatOpen ? (
         <img
@@ -105,7 +110,8 @@ Launcher.propTypes = {
   unreadCount: PropTypes.number,
   displayUnreadCount: PropTypes.bool,
   showTooltip: PropTypes.bool,
-  lastMessage: ImmutablePropTypes.map
+  lastMessage: ImmutablePropTypes.map,
+  colorTheme: PropTypes.string
 };
 
 const mapStateToProps = state => ({
