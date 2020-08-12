@@ -32,28 +32,6 @@ const Header = ({
             <img src={profileAvatar} className="rw-avatar" alt="chat avatar" />
           )
         }
-        <div className="rw-header-buttons">
-          {
-            showFullScreenButton &&
-            <button className="rw-toggle-fullscreen-button" onClick={toggleFullScreen} style={headerColor}>
-              <img
-                className={`rw-toggle-fullscreen ${fullScreenMode ? 'rw-fullScreenExitImage' : 'rw-fullScreenImage'}`}
-                src={fullScreenMode ? fullscreenExit : fullscreen}
-                alt="toggle fullscreen"
-              />
-            </button>
-          }
-          {
-            showCloseButton &&
-            <button className="rw-close-button" onClick={toggleChat} style={headerColor}>
-              <img
-                className={`rw-close ${closeImage ? '' : 'rw-default'}`}
-                src={closeImage || close}
-                alt="close"
-              />
-            </button>
-          }
-        </div>
         <h4 className={`rw-title ${profileAvatar && 'rw-with-avatar'}`}>{title}</h4>
         {subtitle && <span className={profileAvatar && 'rw-with-avatar'}>{subtitle}</span>}
       </div>
@@ -82,3 +60,28 @@ Header.propTypes = {
 };
 
 export default Header;
+
+// Previous window size buttontop left
+
+// <div className="rw-header-buttons">
+//   {
+//     showFullScreenButton &&
+//     <button className="rw-toggle-fullscreen-button" onClick={toggleFullScreen} style={headerColor}>
+//       <img
+//         className={`rw-toggle-fullscreen ${fullScreenMode ? 'rw-fullScreenExitImage' : 'rw-fullScreenImage'}`}
+//         src={fullScreenMode ? fullscreenExit : fullscreen}
+//         alt="toggle fullscreen"
+//       />
+//     </button>
+//   }
+//   {
+//     showCloseButton &&
+//     <button className="rw-close-button" onClick={toggleChat} style={headerColor}>
+//       <img
+//         className={`rw-close ${closeImage ? '' : 'rw-default'}`}
+//         src={closeImage || close}
+//         alt="close"
+//       />
+//     </button>
+//   }
+// </div>

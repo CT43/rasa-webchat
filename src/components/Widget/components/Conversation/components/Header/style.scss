@@ -4,22 +4,24 @@
 
 .#{$namespace}conversation-container {
   .#{$namespace}header {
-    background-color: $tertiary;
+    // Enable below for color select within widget id
+    // background-color: $tertiary;
+    background-image: linear-gradient(90deg, #6400c8, #ff96ff);
     color: $white;
     display: flex;
     flex-direction: column;
     justify-content: center;
     text-align: center;
-    height: 55px;
+    height: 70px;
     font-family: $fontfamily;
     position: relative;
     .#{$namespace}avatar {
       all: initial;
-      height: 35px;
-      width: 35px;
-      position: absolute;
-      top: 12px;
-      left: 14px;
+      height: 46px;
+      width: 46px;
+      position: relative;
+      margin: 12px;
+
     }
   }
 
@@ -43,7 +45,7 @@
 
   .#{$namespace}title {
     font-size: 20px;
-    margin: 0;
+    margin: 12px;
     font-family: $fontfamily;
     position: absolute;
     left: 20px;
