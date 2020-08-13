@@ -32,6 +32,9 @@ const Header = ({
             <img src={profileAvatar} className="rw-avatar" alt="chat avatar" />
           )
         }
+        {
+          <span className="rw-avatar-active-dot"></span>
+        }
         <h4 className={`rw-title ${profileAvatar && 'rw-with-avatar'}`}>{title}</h4>
         {subtitle && <span className={profileAvatar && 'rw-with-avatar'}>{subtitle}</span>}
       </div>

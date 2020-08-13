@@ -24,7 +24,8 @@ const Sender = ({ sendMessage, inputTextFieldHint, disabledInput, userInput }) =
         <button type="submit" className="rw-send" disabled={!(inputValue && inputValue.length > 0)}>
           <Send className="rw-send-icon" ready={!!(inputValue && inputValue.length > 0)} alt="send" />
         </button>
-      </form>));
+      </form>
+    ));
 };
 const mapStateToProps = state => ({
   inputTextFieldHint: state.behavior.get('inputTextFieldHint'),

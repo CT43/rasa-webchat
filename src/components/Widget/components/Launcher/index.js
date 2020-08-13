@@ -10,6 +10,8 @@ import openLauncher from 'assets/launcher_button.svg';
 import closeIcon from 'assets/clear-button-grey.svg';
 import close from 'assets/clear-button.svg';
 import Badge from './components/Badge';
+import chatWidgetDefaultDark1 from 'assets/chat_widget_default_dark_1.svg';
+import chatWidgetMinimizeDark1 from 'assets/chat_widget_minimize_dark.svg';
 
 import './style.scss';
 
@@ -71,13 +73,14 @@ const Launcher = ({
   );
 
   const renderOpenLauncherImage = () => (
-    <div className="rw-open-launcher__container">
-      {unreadCount > 0 && displayUnreadCount && (
-        <div className="rw-unread-count-pastille">{unreadCount}</div>
-      )}
-      <img src={openLauncherImage || openLauncher} className="rw-open-launcher" alt="" />
+    <div>
+    <img
+      src={chatWidgetDefaultDark1 || chatWidgetDefaultDark1} onClick={toggle}
+      className={`rw-launcher rw-launcher-open ${chatWidgetDefaultDark1 ? '' : 'rw-launcher'}`}
+      alt=""
+    />
       {showTooltip && lastMessage.get('sender') === 'response' && renderToolTip()}
-    </div>
+      </div>
   );
 
   const launcherColor = (colorTheme) = {
@@ -85,18 +88,18 @@ const Launcher = ({
   };
 
   return (
-    <button type="button" className={className.join(' ')} onClick={toggle} style={launcherColor}>
-      <Badge badge={badge} />
-      {isChatOpen ? (
-        <img
-          src={closeImage || close}
-          className={`rw-close-launcher ${closeImage ? '' : 'rw-default'}`}
-          alt=""
-        />
-      ) : (
-        renderOpenLauncherImage()
-      )}
-    </button>
+    <div className="rw-launcher">
+    { isChatOpen ? (
+      <img
+        src={chatWidgetMinimizeDark1 || chatWidgetMinimizeDark1} onClick={toggle}
+        className={`rw-launcher rw-launcher-min ${chatWidgetMinimizeDark1 ? '' : 'rw-launcher'}`}
+        alt=""
+      />
+    ) : (
+      renderOpenLauncherImage()
+    )}
+    </div>
+
   );
 };
 
@@ -126,3 +129,28 @@ const mapDispatchToProps = dispatch => ({
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Launcher);
+
+// Original launcher button
+
+// <button type="button" className={className.join(' ')} onClick={toggle} style={launcherColor}>
+//   <Badge badge={badge} />
+//   {isChatOpen ? (
+//
+//     <img
+//       src={closeImage || close}
+//       className={`rw-close-launcher ${closeImage ? '' : 'rw-default'}`}
+//       alt=""
+//     />
+//   ) : (
+//     renderOpenLauncherImage()
+//   )}
+// </button>
+
+// Original renderOpenLauncherImage
+// <div className="rw-open-launcher__container">
+//   {unreadCount > 0 && displayUnreadCount && (
+//     <div className="rw-unread-count-pastille">{unreadCount}</div>
+//   )}
+//   <img src={openLauncherImage || openLauncher} className="rw-open-launcher" alt="" />
+//   {showTooltip && lastMessage.get('sender') === 'response' && renderToolTip()}
+// </div>

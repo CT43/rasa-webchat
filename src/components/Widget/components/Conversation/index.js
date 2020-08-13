@@ -5,6 +5,7 @@ import Header from './components/Header';
 import Messages from './components/Messages';
 import Sender from './components/Sender';
 import './style.scss';
+import insurmiLogo from 'assets/powered_by_insurmi.svg'
 
 const Conversation = props =>
   <div className="rw-conversation-container">
@@ -32,6 +33,7 @@ const Conversation = props =>
       sendMessage={props.sendMessage}
       disabledInput={props.disabledInput}
     />
+    <span className="powered-by-insurmi">Powered by <img src={insurmiLogo} alt=""/></span>
   </div>;
 
 Conversation.propTypes = {

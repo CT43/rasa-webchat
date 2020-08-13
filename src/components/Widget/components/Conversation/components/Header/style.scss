@@ -23,6 +23,16 @@
       margin: 12px;
 
     }
+    .#{$namespace}avatar-active-dot {
+      height: 12px;
+      width: 12px;
+      background-color: #00b838;
+      border-radius: 50%;
+      /* display: inline-block; */
+      position: absolute;
+      top: 43px;
+      left: 47px;
+    }
   }
 
   .#{$namespace}header.#{$namespace}with-subtitle {
@@ -49,7 +59,7 @@
     font-family: $fontfamily;
     position: absolute;
     left: 20px;
-    font-weight: 700;
+    font-weight: 600;
     &.#{$namespace}with-avatar {
       left: 58px;
     }
