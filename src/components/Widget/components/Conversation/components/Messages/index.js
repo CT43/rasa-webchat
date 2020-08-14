@@ -33,8 +33,11 @@ const scrollToBottom = () => {
 class Messages extends Component {
   componentDidMount() {
     scrollToBottom();
-    this.props.toggleInputDisabled()
-    this.props.changeInputFieldHint("Type a message...")
+    
+    // for if you want to remove persisted disabled input on reload situationally
+
+    // this.props.toggleInputDisabled()
+    // this.props.changeInputFieldHint("Type a message...")
   }
 
   componentDidUpdate() {

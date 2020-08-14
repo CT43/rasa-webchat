@@ -40,6 +40,7 @@ class QuickReply extends PureComponent {
   }
 
   render() {
+
     const {
       message,
       getChosenReply,

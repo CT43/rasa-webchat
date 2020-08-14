@@ -12,6 +12,7 @@ import close from 'assets/clear-button.svg';
 import Badge from './components/Badge';
 import chatWidgetDefaultDark1 from 'assets/chat_widget_default_dark_1.svg';
 import chatWidgetMinimizeDark1 from 'assets/chat_widget_minimize_dark.svg';
+import chatWidgetMinimizeLightMenu from 'assets/chat_widget_minimize_light_menu.svg'
 
 import './style.scss';
 
@@ -58,12 +59,11 @@ const Launcher = ({
   const renderToolTip = () => (
     <div className="rw-tooltip-body">
       <div className="rw-tooltip-close" >
-        <button onClick={(e) => { e.stopPropagation(); closeTooltip(); }}>
-          <img
-            src={closeIcon}
+          <img onClick={(e) => { e.stopPropagation(); closeTooltip(); }}
+            src={chatWidgetMinimizeLightMenu}
+            className="minimize-light-menu"
             alt="close"
           />
-        </button>
       </div>
       <div className="rw-tooltip-response">
         {getComponentToRender(lastMessage)}
@@ -76,7 +76,7 @@ const Launcher = ({
     <div>
     <img
       src={chatWidgetDefaultDark1 || chatWidgetDefaultDark1} onClick={toggle}
-      className={`rw-launcher rw-launcher-open ${chatWidgetDefaultDark1 ? '' : 'rw-launcher'}`}
+      className={`rw-launcher rw-launcher-open ${chatWidgetDefaultDark1 ? '' : 'rw-launcher'} ${showTooltip ? 'rw-tooltip-launcher' : ''}`}
       alt=""
     />
       {showTooltip && lastMessage.get('sender') === 'response' && renderToolTip()}

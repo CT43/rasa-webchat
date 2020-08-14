@@ -234,6 +234,8 @@ const ConnectedWidget = forwardRef((props, ref) => {
     //   });
     // }
 
+
+
     // Alright this is where everything functionality wise starts
     // on all but received - you can pass in the sock object itself to save data but received you cant since it's coming from api
     // solution to this is storing the event that seems to start it all - bot utterence - in redux store, then pulling it out and executing it
@@ -241,22 +243,53 @@ const ConnectedWidget = forwardRef((props, ref) => {
     createSocket() {
       // Get rid of below if you don't want to persist the convo_session_uid on a page reload during dev
       // Later when dealing with PII and acct info you will need to either have convo_session_uid expire on time limit or revalidate
+      var myHour = new Date();
+      myHour.setHours(myHour.getHours() + 1); //one hour from now
 
+      localStorage.setItem('timeExp', JSON.stringify(myHour))
+
+      function checkExpiration (){
+          //check if past expiration date
+              var values = JSON.parse(localStorage.getItem('timeExp'));
+          //check "my hour" index here
+          if (values[1] < new Date()) {
+              localStorage.removeItem("timeExp")
+              localStorage.removeItem("convo_session_uid")
+          }
+      }
+
+      function myFunction() {
+          var myinterval = 15*60*1000; // 15 min interval
+          setInterval(function(){ checkExpiration(); }, myinterval );
+      }
+
+      myFunction();
 
       //////////////////////////////
       // if (localStorage.getItem('convo_session_uid') !== null) {
       //   new_uuid = localStorage.getItem('convo_session_uid')
       // }
+      if (localStorage.getItem('convo_session_uid')) {
+      new_uuid = localStorage.getItem('convo_session_uid')
+    }
+
        this.socket = Cable.createConsumer('ws://localhost:3000/cable').subscriptions.create({
           channel: 'ConversationsChannel', convo_session_uid: new_uuid, agency_widget_id: agencyWidgetId
         }, {
           connected: function() {
             let cui = JSON.parse(this.identifier).convo_session_uid
+
+            console.log(localStorage.getItem('convo_session_uid'))
+            console.log(cui)
+            this.perform('client_initialized')
+
+          if (localStorage.getItem('convo_session_uid') !== cui) { // If it's a new session preform client initialized for the greeting
+            this.perform('client_initialized')
+          }
+
             store.dispatch(setConvoUnqId(cui))
 
-            if (localStorage.getItem('convo_session_uid') !== cui) { // If it's a new session preform client initialized for the greeting
-              this.perform('client_initialized')
-            }
+
 
             localStorage.setItem('convo_session_uid', cui)
 
