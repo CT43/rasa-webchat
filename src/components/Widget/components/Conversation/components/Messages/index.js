@@ -106,7 +106,6 @@ class Messages extends Component {
             <img src={profileAvatar} className="rw-avatar" alt="profile" />
           }
           { this.getComponentToRender(message, index, index === messages.size - 1) }
-          { renderMessageDate(message) }
         </div>
       );
 
@@ -171,3 +170,15 @@ export default connect(store => ({
   messages: store.messages,
   displayTypingIndication: store.behavior.get('messageDelayed')
 }))(Messages);
+
+// Original render included for message date
+
+// <div className={`rw-message ${profileAvatar && 'rw-with-avatar'}`} key={index}>
+//   {
+//     profileAvatar &&
+//     message.get('showAvatar') &&
+//     <img src={profileAvatar} className="rw-avatar" alt="profile" />
+//   }
+//   { this.getComponentToRender(message, index, index === messages.size - 1) }
+//   { renderMessageDate(message) }
+// </div>

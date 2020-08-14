@@ -5,7 +5,7 @@
 .#{$namespace}conversation-container {
 
   .#{$namespace}message {
-    margin: 10px;
+    margin: 20px 10px 20px 5px;
     font-size: 14px;
     line-height: 20px;
     display: flex;
@@ -21,11 +21,12 @@
   }
 
   .#{$namespace}client {
-    @include message-bubble($blue-1, $white);
-    background-color: $tertiary !important;
-    max-width: 85%;
+    @include message-bubble($blue-1, black);
+    background-color: $grey-1 !important;
+    max-width: 225px;
     margin-left: auto;
     overflow-wrap: break-word;
+    border-radius: 15px 15px 0px 15px;
     a {
       color: $turqois-1;
     }
@@ -34,6 +35,7 @@
   .#{$namespace}response {
     @include message-bubble($grey-2, #000, 0 15px 15px 15px);
     overflow-wrap: break-word;
+    border-radius: 0px 15px 15px 15px;
   }
 
   /* For markdown elements created with default styles */

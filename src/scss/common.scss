@@ -5,8 +5,8 @@ $fontfamily: 'Source Sans Pro', sans-serif;
 @mixin message-bubble($color, $textColor, $borderRadius: 15px) {
   background-color: $color;
   color: $textColor;
-  border-radius: 41px;
-  padding: 5px 13px;
+  border-radius: 0 15px 15px 15px;
+  padding: 5px 10px;
   max-width: 215px;
   text-align: left;
   font-family: $fontfamily;
