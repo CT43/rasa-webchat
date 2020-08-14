@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import { connect } from 'react-redux';
+import { toggleInputDisabled, changeInputFieldHint } from 'actions';
+
 
 import { MESSAGES_TYPES } from 'constants';
 import { Video, Image, Message, Carousel, QuickReply } from 'messagesComponents';
@@ -31,6 +33,8 @@ const scrollToBottom = () => {
 class Messages extends Component {
   componentDidMount() {
     scrollToBottom();
+    this.props.toggleInputDisabled()
+    this.props.changeInputFieldHint("Type a message...")
   }
 
   componentDidUpdate() {
@@ -154,12 +158,20 @@ class Messages extends Component {
   }
 }
 
+const mapDispatchToProps = dispatch => ({
+  toggleInputDisabled: () => dispatch(toggleInputDisabled()),
+  changeInputFieldHint: hint => dispatch(changeInputFieldHint(hint)),
+  chooseReply: (payload, title, id) => {
+    dispatch(toggleInputDisabled());
+  }
+});
+
 Messages.propTypes = {
   messages: ImmutablePropTypes.listOf(ImmutablePropTypes.map),
   profileAvatar: PropTypes.string,
   customComponent: PropTypes.func,
   showMessageDate: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
-  displayTypingIndication: PropTypes.bool
+  displayTypingIndication: PropTypes.bool,
 };
 
 Message.defaultTypes = {
@@ -168,8 +180,9 @@ Message.defaultTypes = {
 
 export default connect(store => ({
   messages: store.messages,
+  inputState: store.behavior.get('disabledInput'),
   displayTypingIndication: store.behavior.get('messageDelayed')
-}))(Messages);
+}), mapDispatchToProps)(Messages);
 
 // Original render included for message date
 
