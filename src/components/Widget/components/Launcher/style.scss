@@ -190,28 +190,27 @@
     .#{$namespace}replies {
       width: 250px;
 
+      &>div {
+        box-shadow: 0px 6px 14px 0px #bd56e87a;
+        margin-left: auto;
+        position: relative;
+        border-radius: 10px 10px 0px 10px;
+        color: white;
+      }
+
       div:nth-child(1) {
         @include animation(0.6s, 1s, fade-in)
         opacity: 0;
-        margin-left: auto;
-        position: relative;
         // bottom: 10px;
-        color: white;
         margin-top: 0px;
       }
       div:nth-child(2) {
         @include animation(0.5s, 1s, fade-in)
         opacity: 0;
-        margin-left: auto;
-        position: relative;
-        color: white;
       }
       div:nth-child(3) {
         @include animation(0.4s, 1s, fade-in)
         opacity: 0;
-        margin-left: auto;
-        position: relative;
-        color: white;
       }
     }
   }

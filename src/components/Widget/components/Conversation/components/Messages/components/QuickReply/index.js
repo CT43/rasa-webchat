@@ -59,7 +59,9 @@ class QuickReply extends PureComponent {
     }
     return (
       <div>
+      <div className="width-fit-content">
         <Message message={message} />
+        </div>
         {isLast && (
           <div className="rw-replies">
             {message.get('quick_replies').map((reply, index) => {
