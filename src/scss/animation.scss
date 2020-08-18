@@ -91,7 +91,7 @@
   }
 }
 
-@include keyframes(warp-in) {
+@include keyframes(warp-in-launcher) {
   from {
     width: 0px;
     height: 0px;
@@ -104,7 +104,7 @@
   }
 }
 
-@include keyframes(warp-out) {
+@include keyframes(warp-out-launcher) {
   from {
     width: 110px;
     height: 110px;
@@ -114,5 +114,87 @@
     width: 0px;
     height: 0px;
     transform: translateY(0px);
+  }
+}
+
+@include keyframes(warp-out-minimize) {
+  from {
+    width: 100%;
+    height: 100%;
+    transform: translateY(0);
+  }
+  to {
+    width: 0%;
+    height: 0%;
+    transform: translateY(0px);
+  }
+}
+
+@include keyframes(tooltip-launcher-menu-move-linear) {
+  from {
+    position: relative;
+    right: 0px;
+    bottom: 0px;
+  }
+  to {
+    position: relative;
+    bottom: 132px;
+    right: 272px;
+  }
+}
+@include keyframes(tooltip-launcher-menu-move-curve) {
+  from {
+    position: relative;
+    bottom: 00px;
+    right: 40px;
+  }
+  to {
+    position: relative;
+    bottom: 132px;
+    right: 5px;
+  }
+}
+
+@include keyframes(inner-ring-menu-animation) {
+  0% {
+  }
+  10% {
+    opacity: 1;
+  }
+  20%, 70% {
+    opacity: 1;
+    right: -44px;
+    top: -20px;
+    width: 135px;
+    height: 135px;
+  }
+  50%, 98%, 100% {
+    right: -24px;
+    top: -1px;
+    width: 95px;
+    height: 95px;
+    opacity: 1;
+  }
+}
+
+@include keyframes(outer-ring-menu-animation) {
+  0% {
+  }
+  12% {
+    opacity: 1;
+  }
+  23%, 72% {
+    opacity: 1;
+    right: -76px;
+    top: -52px;
+    width: 200px;
+    height: 200px;
+  }
+  52%, 100% {
+    right: -52px;
+    top: -27px;
+    width: 150px;
+    height: 150px;
+    opacity: 1;
   }
 }

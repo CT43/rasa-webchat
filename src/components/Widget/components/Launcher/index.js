@@ -13,6 +13,8 @@ import Badge from './components/Badge';
 import chatWidgetDefaultDark1 from 'assets/chat_widget_default_dark_1.svg';
 import chatWidgetMinimizeDark1 from 'assets/chat_widget_minimize_dark.svg';
 import chatWidgetMinimizeLightMenu from 'assets/chat_widget_minimize_light_menu.svg'
+import chatWidgetNotificationDark from 'assets/chat_widget_notification_dark.svg'
+import chatWidgetNotificationDarkAnim from 'assets/chat_widget_notification_dark_anim.svg'
 
 import './style.scss';
 
@@ -52,6 +54,10 @@ const Launcher = ({
           return null;
       }
     })();
+    // debugger
+    if (message.get('type') === 'quickreply') {
+      return <ComponentToRender id={-1} params={{}} message={message} isLast toggleme={toggle} ischatopen={isChatOpen} />;
+    }
     return <ComponentToRender id={-1} params={{}} message={message} isLast />;
   };
 
@@ -72,14 +78,28 @@ const Launcher = ({
     </div>
   );
 
+
+
   const renderOpenLauncherImage = () => (
     <div>
-    <img
-      src={chatWidgetDefaultDark1 || chatWidgetDefaultDark1} onClick={toggle}
-      className={`rw-launcher rw-launcher-open ${chatWidgetDefaultDark1 ? '' : 'rw-launcher'} ${showTooltip ? 'rw-tooltip-launcher' : ''}`}
-      alt=""
-    />
-      {showTooltip && lastMessage.get('sender') === 'response' && renderToolTip()}
+    { showTooltip ? (
+      <div className='rw-tooltip-launcher rw-launcher '>
+        <span className="inner-ring"></span>
+        <span className="outer-ring"></span>
+        <img
+          src={chatWidgetDefaultDark1 || chatWidgetDefaultDark1} onClick={toggle}
+          className={` rw-launcher-open no-warp-in-launcher ${chatWidgetDefaultDark1 ? '' : 'rw-launcher'}`}
+          alt=""
+        />
+      </div>
+    ) : (
+      <img
+        src={chatWidgetDefaultDark1 || chatWidgetDefaultDark1} onClick={toggle}
+        className={`rw-launcher rw-launcher-open ${chatWidgetDefaultDark1 ? '' : 'rw-launcher'} ${showTooltip ? 'rw-tooltip-launcher' : ''}`}
+        alt=""
+      />
+    )}
+    {showTooltip && lastMessage.get('sender') === 'response' && renderToolTip()}
       </div>
   );
 

@@ -68,10 +68,21 @@
   }
 
   .#{$namespace}tooltip-launcher {
+    @include animation(0, 1s, tooltip-launcher-menu-move-linear)
+    animation-timing-function: cubic-bezier(.62,.15,.46,.94);
+
     position: relative;
-    right: 200px;
-    bottom: 200px
+    right: 273px;
+    bottom: 132px;
+
   }
+
+  .notification-dark {
+    width: 150px;
+    height: 150px;
+  }
+
+
 
   .#{$namespace}tooltip-body {
     position: fixed;
@@ -111,6 +122,7 @@
     .#{$namespace}replies {
       @include replies;
       margin: 30px;
+      margin-top: 0px;
       margin-left: 4px;
       overflow: visible;
     }
@@ -163,21 +175,40 @@
   .#{$namespace}tooltip-response {
   margin-top:1.5rem;
 
+    .#{$namespace}markdown>p {
+      @include animation(0.7s, 1s, fade-in)
+      opacity: 0;
+      background-color: white;
+      margin-bottom: 20px;
+      bottom: 0px;
+      right: 0px;
+      position: relative;
+      box-shadow: 0px 6px 14px 0px #bd56e87a;
+      margin-left: -10px;
+    }
+
     .#{$namespace}replies {
       width: 250px;
 
       div:nth-child(1) {
+        @include animation(0.6s, 1s, fade-in)
+        opacity: 0;
         margin-left: auto;
         position: relative;
         // bottom: 10px;
         color: white;
+        margin-top: 0px;
       }
       div:nth-child(2) {
+        @include animation(0.5s, 1s, fade-in)
+        opacity: 0;
         margin-left: auto;
         position: relative;
         color: white;
       }
       div:nth-child(3) {
+        @include animation(0.4s, 1s, fade-in)
+        opacity: 0;
         margin-left: auto;
         position: relative;
         color: white;
@@ -187,20 +218,24 @@
 
 
   .#{$namespace}tooltip-close {
-    position: absolute;
-    top: 7px;
-    right: 10px;
-    color: red;
-    height: 15px;
-    width: 15px;
+
+    // position: absolute;
+    // top: 7px;
+    // right: 10px;
+    // color: red;
+    height: 17px;
+    width: 17px;
     transition: all 0.2s ease-in-out;
 
     .minimize-light-menu {
+      @include animation(0.6s, 1s, fade-in);
+      opacity: 0;
       position: relative;
-      /* bottom: 273px; */
-      /* right: 100px; */
-      top: -176px;
-      width: 235%;
+      left: 225px;
+      top: 3px;
+      // &:active {
+      //   @include animation(0s, 0.5s, warp-out-minimize);
+      // }
     }
   }
 }
@@ -215,17 +250,21 @@
 // }
 
 .#{$namespace}launcher-min {
-  @include animation(0, 0.5s, warp-in);
+  @include animation(0, 0.5s, warp-in-launcher);
   &:active {
-    @include animation(0, 0.5s, warp-out);
+    @include animation(0, 0.5s, warp-out-launcher);
   }
 }
 
 .#{$namespace}launcher-open {
-  @include animation(0, 0.5s, warp-in);
+  @include animation(0, 0.5s, warp-in-launcher);
   &:active {
-    @include animation(0, 0.5s, warp-out);
+    @include animation(0, 0.5s, warp-out-launcher);
   }
+}
+.no-warp-in-launcher {
+  @include animation(0, 0s, warp-in-launcher);
+
 }
 
 
@@ -240,4 +279,32 @@
   .#{$namespace}hide-sm {
     display: none;
   }
+}
+
+.inner-ring {
+  @include animation(1s, 8s, inner-ring-menu-animation);
+  // animation-timing-function: cubic-bezier(0,1.77,1,-0.84);
+  // animation-iteration-count: 2;
+  opacity: 0;
+  border: 1px solid #6400c84d !important;
+  border-radius: 50%;
+  position: absolute;
+  right: -24px;
+  top: -1px;
+  width: 95px;
+  height: 95px;
+}
+
+.outer-ring {
+  @include animation(1s, 8s, outer-ring-menu-animation);
+  // animation-timing-function: cubic-bezier(0,1.77,1,-0.84);
+  // animation-iteration-count: 2;
+  opacity: 0;
+  border: 1px solid #6400c814 !important;
+  border-radius: 50%;
+  position: absolute;
+  right: -52px;
+  top: -27px;
+  width: 150px;
+  height: 150px;
 }

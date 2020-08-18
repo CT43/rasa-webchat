@@ -24,6 +24,7 @@ class QuickReply extends PureComponent {
     if (!chosenReply && !inputState) {
       this.props.toggleInputDisabled();
       this.props.changeInputFieldHint(hint);
+
     }
   }
 
@@ -32,6 +33,10 @@ class QuickReply extends PureComponent {
       chooseReply,
       id
     } = this.props;
+
+    if (this.props.ischatopen === false) {
+      this.props.toggleme()
+    }
 
     const payload = reply.get('payload');
     const title = reply.get('title');
